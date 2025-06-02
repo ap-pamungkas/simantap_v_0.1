@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('log_perangkat', function (Blueprint $table) {
             $table->id();
-            $table->char('id_perangkat', 36);
+            $table->char('perangkat_id', 36);
             $table->float('latitude')->nullable();
             $table->float('longitude')->nullable();
             $table->decimal('kualitas_udara', 8,2)->nullable();
@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('status');
             $table->timestamps();
 
-            $table->foreign('id_perangkat')->references('id')->on('perangkat')->onDelete('cascade');
+            $table->foreign('perangkat_id')->references('id')->on('perangkat')->onDelete('cascade');
         });
     }
 

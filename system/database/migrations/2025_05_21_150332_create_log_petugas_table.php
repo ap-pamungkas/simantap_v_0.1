@@ -16,6 +16,7 @@ return new class extends Migration
             $table->char('id_perangkat', 36);
             $table->foreign('id_perangkat')->references('id')->on('perangkat')->onDelete('cascade');
             $table->foreignId('id_petugas')->constrained('petugas')->onDelete('cascade');
+            $table->boolean('status')->default(false);
             $table->timestamps();
 
 

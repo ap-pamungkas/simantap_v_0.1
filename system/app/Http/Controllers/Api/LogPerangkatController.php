@@ -32,7 +32,7 @@ class LogPerangkatController extends Controller
         try {
             // Validasi request
             $validator = Validator::make($request->all(), [
-                'id_perangkat' => 'required|string|exists:perangkat,id',
+                'perangkat_id' => 'required|s   tring  ',
                 'latitude' => 'nullable|numeric',
                 'longitude' => 'nullable|numeric',
                 'kualitas_udara' => 'nullable|numeric',
@@ -48,7 +48,7 @@ class LogPerangkatController extends Controller
             }
 
             // Cek apakah perangkat terdaftar dan aktif
-            $perangkat = Perangkat::find($request->id_perangkat);
+            $perangkat = Perangkat::find($request->perangkat_id);
             if (!$perangkat) {
                 return response()->json([
                     'status' => 'error',
@@ -65,13 +65,14 @@ class LogPerangkatController extends Controller
 
             // Buat log perangkat baru
             $logPerangkat = LogPerangkat::create([
-                'id_perangkat' => $request->id_perangkat,
+                'perangkat_id' => $request->perangkat_id,
                 'status'=> $perangkat->status,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
                 'kualitas_udara' => $request->kualitas_udara,
                 'suhu' => $request->suhu,
             ]);
+
 
             // Update last activity perangkat jika diperlukan
             $perangkat->update([
@@ -110,7 +111,7 @@ class LogPerangkatController extends Controller
             }
 
             // Ambil data log perangkat
-            $logs = LogPerangkat::where('id_perangkat', $idPerangkat)
+            $logs = LogPerangkat::where('perangkat_id', $idPerangkat)
                 ->orderBy('created_at', 'desc')
                 ->get();
 
@@ -149,7 +150,7 @@ class LogPerangkatController extends Controller
             }
 
             // Ambil data log perangkat terbaru
-            $latestLog = LogPerangkat::where('id_perangkat', $idPerangkat)
+            $latestLog = LogPerangkat::where('perangkat_id', $idPerangkat)
                 ->latest()
                 ->first();
 

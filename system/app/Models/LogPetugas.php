@@ -29,6 +29,6 @@ class LogPetugas extends Model
 
     public function logPerangkat()
 {
-    return $this->hasManyThrough(LogPerangkat::class, Perangkat::class, 'id', 'id_perangkat', 'id_perangkat', 'id');
+    return $this->hasManyThrough(LogPerangkat::class, Perangkat::class, 'id', 'perangkat_id', 'id_perangkat', 'id');
 }
 }

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
 
 
-Route::prefix('sistemtelemetri_test')->group(function () {
+Route::prefix('simantap')->group(function () {
     Livewire::setScriptRoute(fn($handle) => Route::get('/livewire/livewire.js', $handle));
 Livewire::setUpdateRoute(fn($handle) => Route::post('/livewire/update', $handle));
 });

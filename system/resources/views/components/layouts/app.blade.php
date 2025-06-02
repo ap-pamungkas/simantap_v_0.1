@@ -25,6 +25,8 @@
       integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
       crossorigin="anonymous"
     />
+
+    <link rel="stylesheet" href="{{ url('public/fontawesome-free-6.7.2-web/css/all.css') }}">
     <!--end::Fonts-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <link
@@ -198,6 +200,7 @@
 
 
     @stack('scripts')
+    <script src="{{ url('public/fontawesome-free-6.7.2-web/js/all.js') }}"></script>
   </body>
   <!--end::Body-->
 </html>

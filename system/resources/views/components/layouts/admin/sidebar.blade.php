@@ -23,14 +23,14 @@
                 <li class="nav-item">
                     <a wire:navigate href="{{ route('admin.beranda') }}"
                         class="nav-link {{ request()->routeIs('admin.beranda') ? 'active' : '' }}">
-                        <i class="nav-icon bi bi-house"></i>
+                        <i class="nav-icon fas fa-home"></i>
                         <p>Dashboard</p>
                     </a>
 
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link ">
-                        <i class="nav-icon bi bi-person"></i>
+                        <i class="nav-icon fas fa-users"></i>
                         <p>
                             Data Petugas
                             <i class="nav-arrow bi bi-chevron-right"></i>
@@ -47,7 +47,7 @@
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link ">
-                        <i class="nav-icon bi bi-tools"></i>
+                        <i class="nav-icon fas fa-mobile"></i>
                         <p>
                             Data Perangkat
                             <i class="nav-arrow bi bi-chevron-right"></i>

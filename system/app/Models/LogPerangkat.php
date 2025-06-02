@@ -8,7 +8,7 @@ class LogPerangkat extends Model
 {
     protected $table = 'log_perangkat';
     protected $fillable = [
-        'id_perangkat',
+        'perangkat_id',
         'latitude',
         'longitude',
         'kualitas_udara',
@@ -19,7 +19,7 @@ class LogPerangkat extends Model
 
     public function perangkat()
     {
-        return $this->belongsTo(Perangkat::class, 'id_perangkat', 'id');
+        return $this->belongsTo(Perangkat::class, 'perangkat_id', 'id');
     }
 
 }

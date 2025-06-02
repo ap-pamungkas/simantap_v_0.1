@@ -5,7 +5,7 @@
 				<div class="menu">
 					<div class="menu-header">APP INTERFACE</div>
 					<div class="menu-item active">
-						<a href="index.html" class="menu-link">
+						<a href="{{url('komando')}}" class="menu-link">
 							<span class="menu-icon">
 								<iconify-icon icon="ph:rocket-duotone"></iconify-icon>
 							</span>
