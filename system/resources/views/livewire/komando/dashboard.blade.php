@@ -1,188 +1,343 @@
 <div>
-    <div class="row g-2"> <!-- BEGIN col-8 -->
-        <!-- BEGIN col-4 -->
-        <div class="col-xl-6 col-lg-6">
-            <!-- BEGIN card -->
-            <div class="card h-100">
-                <!-- BEGIN card-header -->
-                <div class="card-header with-btn">
-                    Data Petugas
-                    <div class="card-header-btn">
-                        <a href="#" data-toggle="card-collapse" class="btn"><iconify-icon
-                                icon="material-symbols-light:stat-minus-1"></iconify-icon></a>
-                        <a href="#" data-toggle="card-expand" class="btn"><iconify-icon
-                                icon="material-symbols-light:fullscreen"></iconify-icon></a>
-                        <a href="#" data-toggle="card-remove" class="btn"><iconify-icon
-                                icon="material-symbols-light:close-rounded"></iconify-icon></a>
-                    </div>
+<div class="container-fluid mt-4 p-3">
+    <div class="row">
+        <!-- Summary Cards -->
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <h5 class="card-title text-theme">Petugas Bertugas</h5>
                 </div>
-                <!-- END card-header -->
-                <!-- BEGIN card-body -->
-                <div class="card-body">
-
-
-                    <hr class="my-4" />
-                    <!-- BEGIN Device Status Section -->
-                    <div class="position-relative">
-                        @if (!empty($confirmedDevices))
-                            <div class="row" wire:poll.3s>
-                                @foreach ($confirmedDevices as $device)
-                                    @php
-                                        $statusText = $device['status'] ?? '-';
-                                        $statusColor =
-                                            strtolower($statusText) === 'aktif' ? 'text-success' : 'text-danger';
-                                    @endphp
-
-                                    <div class="col-12 mb-4">
-                                        <div class="card bg-black text-white border border-secondary shadow-lg px-4 py-3"
-                                            style="border-radius: 12px;">
-                                            <div class="row align-items-center g-4">
-                                                {{-- Kolom 1: Foto dan Nama Petugas --}}
-                                                <div
-                                                    class="col-md-4 col-12 text-center d-flex flex-column align-items-center">
-                                                    <img width="100" height="100" src="{{ $device['foto'] }}"
-                                                        alt="Foto {{ $device['nama_petugas'] ?? 'Petugas' }}"
-                                                        class="rounded-circle border border-light shadow"
-                                                        style="object-fit: cover; aspect-ratio: 1/1;"
-                                                        onerror="this.src='https://via.placeholder.com/100x100';">
-                                                    <div class="fw-bold fs-5 mt-3">{{ $device['nama_petugas'] ?? '-' }}
-                                                    </div>
-                                                </div>
-
-                                                {{-- Kolom 2: Status dan Nomor Seri --}}
-                                                <div class="col-md-4 col-12 text-center text-md-start">
-                                                    <div class="text-uppercase text-secondary small fw-semibold">Status
-                                                    </div>
-                                                    <div class="mb-3 fw-bold {{ $statusColor }}">{{ $statusText }}
-                                                    </div>
-
-                                                    <div class="text-uppercase text-secondary small fw-semibold">Nomor
-                                                        Seri</div>
-                                                    <div class="fs-4 fw-bold text-warning">{{ $device['no_seri'] }}
-                                                    </div>
-                                                </div>
-
-                                                {{-- Kolom 3: Log Data --}}
-                                                <div class="col-md-4 col-12 text-center text-md-start">
-                                                    <div class="text-uppercase text-secondary small fw-semibold mb-1">
-                                                        Kualitas Udara</div>
-                                                    <div class="mb-2">
-                                                        <span
-                                                            class="fs-4 fw-bold text-warning">{{ $device['kualitas_udara'] ?? '-' }}</span>
-                                                    </div>
-
-                                                    <div class="text-uppercase text-secondary small fw-semibold mb-1">
-                                                        Suhu</div>
-                                                    <div class="text-danger fs-5 fw-bold">
-                                                        {{ $device['suhu'] ? $device['suhu'] . '°C' : '-' }}</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @else
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="card bg-black text-white border border-secondary shadow-lg p-5 text-center"
-                                        style="border-radius: 12px;">
-                                        <p class="mb-2 fs-5 fw-semibold text-warning">Belum ada perangkat yang
-                                            dikonfirmasi</p>
-                                        <p class="text-white-50 mb-0">Scan perangkat untuk memulai pemantauan.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                    </div>
-
-                    <!-- END Device Status Section -->
-                    <!-- END Device Status Section -->
-
-
+                <div class="card-body d-flex align-items-center">
+                    <i class="fas fa-users fa-2x me-3 text-theme"></i>
+                    <h3 class="card-text">{{ $staffOnDuty }}</h3>
                 </div>
-                <!-- END card-body -->
             </div>
-            <!-- END card -->
         </div>
-        <!-- END col-4 -->
-        <!-- BEGIN col-4 -->
-        <div class="col-xl-6 col-lg-6">
-            <!-- BEGIN card -->
-            <div class="card h-100">
-                <!-- BEGIN card-header -->
-                <div class="card-header with-btn">
-                    Registrasi Petugas
-
-                    <div class="card-header-btn">
-                        <a href="#" data-toggle="card-collapse" class="btn"><iconify-icon
-                                icon="material-symbols-light:stat-minus-1"></iconify-icon></a>
-                        <a href="#" data-toggle="card-expand" class="btn"><iconify-icon
-                                icon="material-symbols-light:fullscreen"></iconify-icon></a>
-                        <a href="#" data-toggle="card-remove" class="btn"><iconify-icon
-                                icon="material-symbols-light:close-rounded"></iconify-icon></a>
-                    </div>
-
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <h5 class="card-title text-theme">Perangkat Digunakan</h5>
                 </div>
-                <!-- END card-header -->
-                <div class="card-body " wire:ignore.self>
-                    <button class="btn btn-success mb-3" onclick="startScanner()">Buka Kamera & Scan</button>
-                    <video id="scanner-preview" class="w-100 d-none" autoplay playsinline muted wire:ignore></video>
-
-
-                    @if (session()->has('message'))
-                        <div class="alert alert-success mb-3">
-                            {{ session('message') }}
-                        </div>
-                    @endif
-
-                    @if (session()->has('error'))
-                        <div class="alert alert-danger mb-3">
-                            {{ session('error') }}
-                        </div>
-                    @endif
-
-                    <form wire:submit.prevent="confirmDevice">
-                        <div class="mb-3">
-                            <label for="barcodeInput" class="form-label">No Seri</label>
-                            <input type="text" id="barcodeInput" wire:model="qrcode" class="form-control"
-                                placeholder="Scan barcode di sini..." readonly>
-                        </div>
-
-                        @if ($selectedDevice)
-                            <div class="mb-3" wire:poll.2s>
-                                <label class="form-label">Status</label>
-                                <input type="text" class="form-control" value="{{ $selectedDevice->status }}"
-                                    readonly>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Pilih Petugas</label>
-                                <select wire:model.live="selectedPetugas" class="form-select" required>
-                                    <option value="">-- Pilih Petugas --</option>
-                                    @foreach ($petugasList as $id => $petugas)
-                                        <option value="{{ $id }}">{{ $petugas }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary">Konfirmasi</button>
-
-
-                        @endif
-                    </form>
+                <div class="card-body d-flex align-items-center">
+                    <i class="fas fa-laptop fa-2x me-3 text-theme"></i>
+                    <h3 class="card-text">{{ $devicesUsed }}</h3>
                 </div>
-
             </div>
-            <!-- END card -->
         </div>
-        <!-- END col-4 -->
-
-
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <h5 class="card-title text-theme">Perangkat Aktif</h5>
+                </div>
+                <div class="card-body d-flex align-items-center">
+                    <i class="fas fa-check-circle fa-2x me-3 text-theme"></i>
+                    <h3 class="card-text">{{ $devicesActive }}</h3>
+                </div>
+            </div>
+        </div>
     </div>
 
-    @livewireScripts
-    {{-- <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script> --}}
-    <script src="{{ url('public/scan/instascan.min.js') }}"></script>
-    @include('livewire.komando.scanner-script')
+    <div class="row">
+        <!-- Temperature Chart -->
+        <div class="col-md-6">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-6">
+                            <h5 class="text-theme card-title">SUHU (°C)</h5>
+                        </div>
+                        <div class="col-6">
+                            <div class="float-end">
+                                <a href="#" data-toggle="card-collapse" class="btn">
+                                    <i class="fas fa-minus"></i>
+                                </a>
+                                <a href="#" data-toggle="card-expand" class="btn">
+                                    <i class="fas fa-expand"></i>
+                                </a>
+                                <a href="#" data-toggle="card-remove" class="btn">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="temperatureChart"></div>
+                </div>
+            </div>
+        </div>
+        <!-- CO2 Chart -->
+        <div class="col-md-6">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-6">
+                            <h5 class="text-theme card-title">KUALITAS UDARA (CO2, PPM)</h5>
+                        </div>
+                        <div class="col-6">
+                            <div class="float-end">
+                                <a href="#" data-toggle="card-collapse" class="btn">
+                                    <i class="fas fa-minus"></i>
+                                </a>
+                                <a href="#" data-toggle="card-expand" class="btn">
+                                    <i class="fas fa-expand"></i>
+                                </a>
+                                <a href="#" data-toggle="card-remove" class="btn">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="co2Chart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- Heatmap Map Row -->
+    <div class="row">
+        <!-- Temperature Heatmap Map -->
+        <div class="col-md-12">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-6">
+                            <h5 class="text-theme card-title">PETA SUHU (°C)</h5>
+                        </div>
+                        <div class="col-6">
+                            <div class="float-end">
+                                <a href="#" data-toggle="card-collapse" class="btn">
+                                    <i class="fas fa-minus"></i>
+                                </a>
+                                <a href="#" data-toggle="card-expand" class="btn">
+                                    <i class="fas fa-expand"></i>
+                                </a>
+                                <a href="#" data-toggle="card-remove" class="btn">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="temperatureMap" style="height: 350px;"></div>
+                </div>
+            </div>
+        </div>
+        <!-- CO2 Heatmap Map -->
+        <div class="col-md--12">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-6">
+                            <h5 class="text-theme card-title">PETA KUALITAS UDARA (CO2, PPM)</h5>
+                        </div>
+                        <div class="col-6">
+                            <div class="float-end">
+                                <a href="#" data-toggle="card-collapse" class="btn">
+                                    <i class="fas fa-minus"></i>
+                                </a>
+                                <a href="#" data-toggle="card-expand" class="btn">
+                                    <i class="fas fa-expand"></i>
+                                </a>
+                                <a href="#" data-toggle="card-remove" class="btn">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="co2Map" style="height: 350px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ApexCharts CDN (for existing charts) -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<!-- Leaflet CSS and JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Leaflet Heatmap Plugin -->
+<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+
+<script>
+    // Temperature Chart (unchanged)
+    var temperatureOptions = {
+        chart: {
+            type: 'line',
+            height: 350,
+            zoom: { enabled: false },
+            animations: { enabled: true }
+        },
+        series: [
+            { name: 'Data 1', data: @json($temperatureData['data1']) },
+            { name: 'Data 2', data: @json($temperatureData['data2']) },
+            { name: 'Data 3', data: @json($temperatureData['data3']) },
+            { name: 'Data 4', data: @json($temperatureData['data4']) },
+            { name: 'Average', data: @json($temperatureData['average']) }
+        ],
+        xaxis: {
+            categories: @json($temperatureData['labels']),
+            title: { text: 'Tahun',
+
+                style: {
+                    fontSize: '14px',
+                    color: '#f2f2f2',
+                    fontWeight: 'bold',
+                    fontFamily: 'Arial, sans-serif',
+
+                    }
+             }
+        },
+        yaxis: {
+            title: { text: 'Suhu (°C)' ,
+                style: {
+                    fontSize: '14px',
+                    color: '#f2f2f2',
+                    fontWeight: 'bold',
+                    fontFamily: 'Arial, sans-serif',
+                }
+            }
+        },
+        stroke: {
+            curve: 'straight',
+            width: 2
+        },
+        colors: ['#FF5733', '#C70039', '#FFC107', '#2196F3', '#FFD700'],
+        legend: {
+            show: true,
+            position: 'top',
+            horizontalAlign: 'right',
+            markers: {
+                fillColors: ['#FF5733', '#C70039', '#FFC107', '#2196F3', '#FFD700']
+            }
+        },
+        grid: {
+            borderColor: '#f1f1f1'
+        }
+    };
+
+    var temperatureChart = new ApexCharts(document.querySelector("#temperatureChart"), temperatureOptions);
+    temperatureChart.render();
+
+    // CO2 Chart (unchanged)
+    var co2Options = {
+        chart: {
+            type: 'line',
+            height: 350,
+            zoom: { enabled: false },
+            animations: { enabled: true }
+        },
+        series: [
+            { name: 'Data 1', data: @json($co2Data['data1']) },
+            { name: 'Data 2', data: @json($co2Data['data2']) },
+            { name: 'Data 3', data: @json($co2Data['data3']) },
+            { name: 'Data 4', data: @json($co2Data['data4']) },
+            { name: 'Average', data: @json($co2Data['average']) }
+        ],
+        xaxis: {
+            categories: @json($co2Data['labels']),
+            title: { text: 'Tahun' }
+        },
+        yaxis: {
+            title: { text: 'CO2 (ppm)' }
+        },
+        stroke: {
+            curve: 'straight',
+            width: 2
+        },
+        colors: ['#FF5733', '#C70039', '#FFC107', '#2196F3', '#FFD700'],
+        legend: {
+            show: true,
+            position: 'top',
+            horizontalAlign: 'right',
+            markers: {
+                fillColors: ['#FF5733', '#C70039', '#FFC107', '#2196F3', '#FFD700']
+            }
+        },
+        grid: {
+            borderColor: '#f1f1f1'
+        }
+    };
+
+    var co2Chart = new ApexCharts(document.querySelector("#co2Chart"), co2Options);
+    co2Chart.render();
+
+    // Temperature Heatmap Map
+    var temperatureMap = L.map('temperatureMap').setView([-1.8500, 109.9667], 13); // Centered on Ketapang
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(temperatureMap);
+
+    // Combine temperature data into heatmap points (lat, lng, intensity)
+    var temperaturePoints = [];
+    var tempSeries = [
+        @json($temperatureData['data1']),
+        @json($temperatureData['data2']),
+        @json($temperatureData['data3']),
+        @json($temperatureData['data4']),
+        @json($temperatureData['average'])
+    ];
+    var coords = @json($temperatureData['coords']);
+    tempSeries.forEach(function(series) {
+        series.forEach(function(value, index) {
+            if (coords[index]) {
+                temperaturePoints.push([coords[index].lat, coords[index].lng, value / 40]);
+            }
+        });
+    });
+
+    L.heatLayer(temperaturePoints, {
+        radius: 25,
+        blur: 15,
+        maxZoom: 17,
+        gradient: {
+            0.0: '#00A1D6', // Low (blue)
+            0.5: '#FFD700', // Moderate (yellow)
+            0.75: '#FF5733', // High (orange)
+            1.0: '#C70039'  // Extreme (red)
+        }
+    }).addTo(temperatureMap);
+
+    // CO2 Heatmap Map
+    var co2Map = L.map('co2Map').setView([-1.8500, 109.9667], 13); // Centered on Ketapang
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(co2Map);
+
+    // Combine CO2 data into heatmap points (lat, lng, intensity)
+    var co2Points = [];
+    var co2Series = [
+        @json($co2Data['data1']),
+        @json($co2Data['data2']),
+        @json($co2Data['data3']),
+        @json($co2Data['data4']),
+        @json($co2Data['average'])
+    ];
+    var co2Coords = @json($co2Data['coords']);
+    co2Series.forEach(function(series) {
+        series.forEach(function(value, index) {
+            if (co2Coords[index]) {
+                co2Points.push([co2Coords[index].lat, co2Coords[index].lng, value / 500]);
+            }
+        });
+    });
+
+    L.heatLayer(co2Points, {
+        radius: 25,
+        blur: 15,
+        maxZoom: 17,
+        gradient: {
+            0.0: '#00A1D6', // Low (blue)
+            0.5: '#FFD700', // Moderate (yellow)
+            0.75: '#FF5733', // High (orange)
+            1.0: '#C70039'  // Extreme (red)
+        }
+    }).addTo(co2Map);
+</script>
 </div>

@@ -21,45 +21,17 @@
 			<div class="brand">
 				<a href="index.html" class="brand-logo w-100">
 					<iconify-icon icon="lets-icons:time-progress-duotone" class="fs-24px me-2 text-theme"></iconify-icon>
-					<span class="brand-text fw-500 fs-14px">QUANTUM</span>
+					<span class="brand-text fw-500 fs-14px">SIGAP-IO</span>
 				</a>
 			</div>
 			<!-- END brand -->
 
 			<!-- BEGIN menu -->
 			<div class="menu">
-				<div class="menu-item dropdown d-lg-flex d-none">
-					<a href="#" class="menu-link">
-						<span>$1,859,050.12</span>
-					</a>
-				</div>
-				<div class="menu-item dropdown d-lg-flex d-none me-3">
-					<div class="menu-search-inline">
-						<iconify-icon icon="ph:magnifying-glass-duotone" class="menu-icon"></iconify-icon>
-						<input class="form-control" placeholder="Search something..." value="" name="keywords" />
-					</div>
-				</div>
-				<div class="menu-item dropdown d-lg-none d-flex">
-					<a href="#" class="menu-link menu-link-icon" data-toggle-class="app-header-menu-search-toggled" data-toggle-target=".app">
-						<iconify-icon icon="ph:magnifying-glass-duotone" class="menu-icon"></iconify-icon>
-					</a>
-				</div>
-				<div class="menu-item dropdown">
-					<a href="#" class="menu-link menu-link-icon px-lg-3" data-bs-toggle="dropdown" data-bs-display="static">
-						<iconify-icon icon="ph:globe-duotone" class="menu-icon me-lg-2"></iconify-icon>
-						<span class="d-lg-flex d-none">EN</span>
-					</a>
-					<div class="dropdown-menu fade dropdown-menu-end mt-1 fs-10px text-uppercase">
-						<a href="#" class="dropdown-item d-flex align-items-center">English <span class="ms-auto fw-semibold text-white w-20px text-center">EN</span></a>
-						<a href="#" class="dropdown-item d-flex align-items-center">Spanish <span class="ms-auto fw-semibold text-white w-20px text-center">ES</span></a>
-						<a href="#" class="dropdown-item d-flex align-items-center">French <span class="ms-auto fw-semibold text-white w-20px text-center">FR</span></a>
-						<a href="#" class="dropdown-item d-flex align-items-center">German <span class="ms-auto fw-semibold text-white w-20px text-center">DE</span></a>
-						<a href="#" class="dropdown-item d-flex align-items-center">Italian <span class="ms-auto fw-semibold text-white w-20px text-center">IT</span></a>
-						<a href="#" class="dropdown-item d-flex align-items-center">Japanese <span class="ms-auto fw-semibold text-white w-20px text-center">JA</span></a>
-						<a href="#" class="dropdown-item d-flex align-items-center">Chinese <span class="ms-auto fw-semibold text-white w-20px text-center">ZH</span></a>
-						<a href="#" class="dropdown-item d-flex align-items-center">Russian <span class="ms-auto fw-semibold text-white w-20px text-center">RU</span></a>
-					</div>
-				</div>
+
+
+
+
 				<div class="menu-item dropdown dropdown-mobile-full">
 					<a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link menu-link-icon">
 						<iconify-icon icon="ph:calendar-dots-duotone" class="menu-icon"></iconify-icon>
@@ -308,7 +280,7 @@
 				</div>
 				<div class="menu-item dropdown">
 					<a href="#" data-toggle="theme-panel-expand" class="menu-link menu-link-icon">
-						<iconify-icon icon="ph:gear-duotone" class="menu-icon"></iconify-icon>
+						<i class="fa fa-gear fa-2x"></i>
 					</a>
 					<div class="dropdown-menu dropdown-menu-end fade">
 						<h6 class="dropdown-header">Settings</h6>

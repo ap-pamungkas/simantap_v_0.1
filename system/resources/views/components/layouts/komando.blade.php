@@ -13,7 +13,7 @@
 	<link href="{{ url('public/komando') }}/assets/css/vendor.min.css" rel="stylesheet" />
 	<link href="{{ url('public/komando') }}/assets/css/app.min.css" rel="stylesheet" />
 	<!-- ================== END core-css ================== -->
-
+  <link rel="stylesheet" href="{{ url('public/fontawesome-free-6.7.2-web/css/all.css') }}">
 	<link href="{{ url('public/komando') }}/assets/plugins/jvectormap-next/jquery-jvectormap.css" rel="stylesheet" />
 
 </head>
@@ -202,7 +202,7 @@
 		<!-- BEGIN theme-panel -->
 		<div class="app-theme-panel">
 			<div class="app-theme-panel-container">
-				<a href="#" data-toggle="theme-panel-expand" class="app-theme-toggle-btn"><iconify-icon icon="ph:gear-duotone"></iconify-icon></a>
+				<a href="#" data-toggle="theme-panel-expand" class="app-theme-toggle-btn"><i class="fa fa-gear "></i></a>
 				<div class="app-theme-panel-content">
 					<div class="fs-10px fw-semibold text-white">
 						THEME COLOR
@@ -256,6 +256,7 @@
 	</script>
 <script src="{{ url('public/komando') }}/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js" data-cf-settings="9cb4bf91e82b9cd7fafe8f3d-|49" defer></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"943499bbba5ffd84","version":"2025.4.0-1-g37f21b1","r":1,"serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"4db8c6ef997743fda032d4f73cfeff63","b":1}' crossorigin="anonymous"></script>
 </body>
+   <script src="{{ url('public/fontawesome-free-6.7.2-web/js/all.js') }}"></script>
 {{-- public\komando\cdn-cgi\scripts\7d0fa10a\cloudflare-static\rocket-loader.min.js --}}
 <!-- Mirrored from seantheme.com/quantum/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 21 May 2025 14:00:45 GMT -->
 </html>
