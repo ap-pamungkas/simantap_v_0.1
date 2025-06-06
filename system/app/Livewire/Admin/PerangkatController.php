@@ -11,7 +11,7 @@ use Livewire\WithPagination;
 class PerangkatController extends Component
 {
 
-use  WithPagination, Message;
+    use  WithPagination, Message;
     public $selectedId;
     public $no_seri;
     public $isEditMode = false;
@@ -64,7 +64,8 @@ use  WithPagination, Message;
 
 
 
-    public function deleteData($id){
+    public function deleteData($id)
+    {
         $this->perangkatRepository->deleteDevices($id);
         $this->dispatchSuccesMassage('data berhasil di hapus');
         $this->js('
@@ -76,7 +77,8 @@ use  WithPagination, Message;
 
 
 
-    public function updateConditions($devicesId){
+    public function updateConditions($devicesId)
+    {
         $devices = $this->perangkatRepository->updateConditions($devicesId);
         if (!$devices) {
             $this->dispatchErrorMessage('Perangkat tidak ditemukan!');
@@ -88,14 +90,13 @@ use  WithPagination, Message;
 
 
 
-    private function resetPage(){
-    }
+    private function resetPage() {}
 
 
-    public function close(){
+    public function close()
+    {
 
         $this->resetPage();
         $this->reset(['search', 'perPage', 'sortField', 'sortDirection']);
-
     }
 }

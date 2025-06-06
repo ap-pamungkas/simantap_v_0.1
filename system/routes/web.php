@@ -10,6 +10,7 @@ use App\Livewire\Komando\DashboardController;
 use App\View\Components\Komando;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Komando\PetugasController as KomandoPetugasController;
+use App\Livewire\Komando\PerangkatController as KomandoPerangkatController;
 use App\Livewire\Komando\RegistrasiPetugasController;
 use Livewire\Livewire;
 
@@ -36,5 +37,6 @@ Route::prefix('komando')->group(function () {
     Route::get('/', DashboardController::class)->name('komando.dashboard');
     Route::get('/petugas', KomandoPetugasController::class)->name('komando.petugas');
     Route::get('/petugas/registrasi', RegistrasiPetugasController::class)->name('komando.petugas.registrasi');
+    Route::get('/perangkat', KomandoPerangkatController::class)->name('komando.perangkat');
 
 });

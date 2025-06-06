@@ -2,25 +2,20 @@
 
 namespace App\Livewire\Komando;
 
-use App\Repositories\PetugasRepository;
+use App\Repositories\PerangkatRepository;
+use App\Traits\Message;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class PetugasController extends Component
+class PerangkatController extends Component
 {
-    use  WithPagination;
-    #[Title("Petugas")]
-
-    public $petugas_id,
-        $nama,
-        $alamat,
-        $jabatan_id,
-        $tgl_lahir,
-        $jenis_kelamin,
-        $foto;
-
+    use  WithPagination, Message;
+    #[Title("Perangkat")]
+    #[Layout("components.layouts.komando")]
+    public $selectedId;
+    public $no_seri;
     public $isEditMode = false;
 
     public $search = '';
@@ -42,34 +37,21 @@ class PetugasController extends Component
             $this->sortDirection = 'asc';
         }
     }
+    private $perangkatRepository;
 
-    public function updatingSearch()
+    public function boot(PerangkatRepository $perangkatRepository)
     {
-        $this->resetPage();
+        $this->perangkatRepository = $perangkatRepository;
     }
 
- private $petugasRepository;
-
-
-   public function __construct(){
-       $this->petugasRepository = new PetugasRepository();
-   }
-
-    public function close()
-    {
-        $this->reset();
-    }
-
-    #[Layout('components.layouts.komando')]
     public function render()
     {
-        $data['list_petugas'] = $this->petugasRepository->getPetugas(
+        $data['list_devices'] = $this->perangkatRepository->getDevices(
             $this->search,
             $this->perPage,
             $this->sortField,
             $this->sortDirection
         );
-
-        return view('livewire.komando.petugas', $data);
+        return view('livewire.komando.perangkat', $data);
     }
 }

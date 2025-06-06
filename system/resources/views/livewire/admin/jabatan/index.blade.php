@@ -1,4 +1,3 @@
-
 <div>
     <x-alerts.dispatch-message />
     <div wire:poll.1s class="card card-outline card-secondary">

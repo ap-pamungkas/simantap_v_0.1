@@ -43,152 +43,19 @@
 
 		<!-- BEGIN #content -->
 		<div id="content" class="app-content p-3">
-			<!-- BEGIN row -->
-               {{-- <div class="col-xl-12">
-            <!-- BEGIN card -->
-            <div class="card h-100">
-                <!-- BEGIN card-header -->
-                <div class="card-header with-btn">
-                    TRAFFIC ANALYTICS
-                    <div class="card-header-btn">
-                        <a href="#" data-toggle="card-collapse" class="btn"><iconify-icon
-                                icon="material-symbols-light:stat-minus-1"></iconify-icon></a>
-                        <a href="#" data-toggle="card-expand" class="btn"><iconify-icon
-                                icon="material-symbols-light:fullscreen"></iconify-icon></a>
-                        <a href="#" data-toggle="card-remove" class="btn"><iconify-icon
-                                icon="material-symbols-light:close-rounded"></iconify-icon></a>
-                    </div>
+			
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="card mb-5 mt-3 shadow-sm">
+                        <div class="card-header">
+                        <h1 class="text-theme">{{ $title}}</h1>
+                     </div>
+                   </div>
+                   
+                   {{ $slot }}
+                  </div>
                 </div>
-                <!-- END card-header -->
-
-                <!-- BEGIN card-body -->
-                <div class="card-body p-0">
-                    <div class="row gx-0">
-                        <div class="col-lg-8 position-relative">
-                            <!-- BEGIN map -->
-                            <div id="world-map" class="" style="height: 344px;"></div>
-                            <div
-                                class="position-absolute text-white fs-10px bottom-0 end-0 start-0 p-15px d-flex align-items-center">
-                                <iconify-icon class="text-white fs-30px me-2"
-                                    icon="solar:map-point-rotate-bold-duotone"></iconify-icon>
-                                <div class="flex-1">
-                                    Real-time data updates every 5 minutes, providing insights into visitor traffic
-                                    patterns and peak times. Click on any location for detailed analytics.
-                                </div>
-                            </div>
-                            <!-- END map -->
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="p-3">
-                                <div class="h4 text-theme mb-0 fw-100">[33,129]</div>
-                                <p class="text-white fs-10px fw-semibold mb-0">TOTAL VISITS</p>
-
-                                <hr class="my-2" />
-
-                                <table class="w-100 text-truncate fs-10px">
-                                    <thead>
-                                        <tr class="text-white">
-                                            <th class="w-50">COUNTRY</th>
-                                            <th class="w-25 text-end">VISITS</th>
-                                            <th class="w-25 text-end">PCT%</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="text-body text-opacity-75">
-                                        <tr>
-                                            <td>FRANCE</td>
-                                            <td class="text-end">13,849</td>
-                                            <td class="text-end">40.79%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>SPAIN</td>
-                                            <td class="text-end">3,216</td>
-                                            <td class="text-end">9.79%</td>
-                                        </tr>
-                                        <tr class="text-theme fw-bold bg-white bg-opacity-10">
-                                            <td>MEXICO</td>
-                                            <td class="text-end">1,398</td>
-                                            <td class="text-end">4.26%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>UNITED STATES</td>
-                                            <td class="text-end">1,090</td>
-                                            <td class="text-end">3.32%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>BELGIUM</td>
-                                            <td class="text-end">1,045</td>
-                                            <td class="text-end">3.18%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>INDIA</td>
-                                            <td class="text-end">1,033</td>
-                                            <td class="text-end">3.09%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>BRAZIL</td>
-                                            <td class="text-end">954</td>
-                                            <td class="text-end">2.81%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>JAPAN</td>
-                                            <td class="text-end">911</td>
-                                            <td class="text-end">3.09%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>ARCANIA</td>
-                                            <td class="text-end">839</td>
-                                            <td class="text-end">2.13%</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                                <hr class="my-2" />
-
-                                <table class="w-100 text-truncate fs-10px">
-                                    <thead>
-                                        <tr class="text-white">
-                                            <th class="w-50">BROWSER</th>
-                                            <th class="w-25 text-end">NO/m</th>
-                                            <th class="w-25 text-end">PCT%</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="text-body text-opacity-75">
-                                        <tr>
-                                            <td>Chrome</td>
-                                            <td class="text-end">8,000</td>
-                                            <td class="text-end">40%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Firefox</td>
-                                            <td class="text-end">5,000</td>
-                                            <td class="text-end">25%</td>
-                                        </tr>
-                                        <tr class="text-theme fw-600 bg-white bg-opacity-10">
-                                            <td>Safari</td>
-                                            <td class="text-end">3,000</td>
-                                            <td class="text-end">15%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Edge</td>
-                                            <td class="text-end">2,000</td>
-                                            <td class="text-end">10%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Opera</td>
-                                            <td class="text-end">1,000</td>
-                                            <td class="text-end">5%</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- END card-body -->
-            </div>
-            <!-- END card -->
-        </div> --}}
-			{{ $slot }}
+            
 			<!-- END row -->
 		</div>
 		<!-- END #content -->

@@ -1,5 +1,5 @@
 <div>
-<div class="container-fluid mt-4 p-3">
+
     <div class="row">
         <!-- Summary Cards -->
         <div class="col-md-4">
@@ -122,7 +122,9 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div id="temperatureMap" style="height: 350px;"></div>
+                    <div class="position-relative">
+                        <div id="temperatureMap" style="height: 350px;"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -155,7 +157,6 @@
             </div>
         </div>
     </div>
-</div>
 
 <!-- ApexCharts CDN (for existing charts) -->
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
