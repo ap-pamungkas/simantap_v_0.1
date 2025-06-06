@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <!-- Mirrored from seantheme.com/quantum/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 21 May 2025 14:00:27 GMT -->
 <head>
 	<meta charset="utf-8" />
-	<title>Quantum | Dashboard</title>
+	<title> {{  config('app.name', '') }} || {{ $title ?? '' }}</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta name="description" content="" />
 	<meta name="author" content="" />
@@ -124,6 +124,5 @@
 <script src="{{ url('public/komando') }}/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js" data-cf-settings="9cb4bf91e82b9cd7fafe8f3d-|49" defer></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"943499bbba5ffd84","version":"2025.4.0-1-g37f21b1","r":1,"serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"4db8c6ef997743fda032d4f73cfeff63","b":1}' crossorigin="anonymous"></script>
 </body>
    <script src="{{ url('public/fontawesome-free-6.7.2-web/js/all.js') }}"></script>
-{{-- public\komando\cdn-cgi\scripts\7d0fa10a\cloudflare-static\rocket-loader.min.js --}}
-<!-- Mirrored from seantheme.com/quantum/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 21 May 2025 14:00:45 GMT -->
+@stack('scripts')
 </html>

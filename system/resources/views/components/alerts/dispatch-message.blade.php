@@ -1,6 +1,5 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 @if (session()->has('status'))
    <script>
     window.addEventListener('alert', event => {
@@ -13,6 +12,5 @@
         });
     });
 </script>
-
 @endif
 @endpush
