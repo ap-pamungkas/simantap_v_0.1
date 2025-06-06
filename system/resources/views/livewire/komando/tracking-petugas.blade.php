@@ -125,139 +125,202 @@
     
         @livewireScripts
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-        <script>
-            // Initialize map centered on Indonesia
-            var map = L.map('map').setView([-2.5489, 118.0149], 5);
-    
-            // Define base layers
-            var baseLayers = {
-                "OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+<script>
+    // Map initialization function
+    function initMap(position) {
+        const map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 20);
+        
+        // Map layer configuration
+        const mapLayers = {
+            baseLayerConfig: {
+                "OpenStreetMap": {
+                    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                }),
-                
-                "Satellite": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                },
+                "Satellite": {
+                    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
                     attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-                }),
-                
-                "Dark": L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                },
+                "Dark": {
+                    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-                }),
-                
-                "Light": L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                },
+                "Light": {
+                    url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-                }),
-                
-                "Terrain": L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                },
+                "Terrain": {
+                    url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
                     attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
-                })
-            };
-    
-            // Add default layer
-            baseLayers["OpenStreetMap"].addTo(map);
-    
-            // Add layer control
-            L.control.layers(baseLayers).addTo(map);
-    
-            // Sample static officer data
-            const officers = [
-                {
-                    name: 'Officer Ahmad Rizki',
-                    no_seri: 'PTG001',
-                    position: [-6.2088, 106.8456], // Jakarta
-                    image: 'https://randomuser.me/api/portraits/men/1.jpg',
-                    temperature: '32°C',
-                    airQuality: 'Baik',
-                    status: 'Online',
-                    lastUpdate: '2 menit yang lalu'
-                },
-                {
-                    name: 'Officer Sari Dewi',
-                    no_seri: 'PTG002',
-                    position: [-7.2575, 112.7521], // Surabaya
-                    image: 'https://randomuser.me/api/portraits/women/2.jpg',
-                    temperature: '30°C',
-                    airQuality: 'Sedang',
-                    status: 'Online',
-                    lastUpdate: '5 menit yang lalu'
-                },
-                {
-                    name: 'Officer Budi Santoso',
-                    no_seri: 'PTG003',
-                    position: [-5.1477, 119.4327], // Makassar
-                    image: 'https://randomuser.me/api/portraits/men/3.jpg',
-                    temperature: '33°C',
-                    airQuality: 'Baik',
-                    status: 'Online',
-                    lastUpdate: '1 menit yang lalu'
-                }
-            ];
-    
-            // Function to get air quality color
-            function getAirQualityColor(quality) {
-                switch(quality.toLowerCase()) {
-                    case 'baik': return '#4CAF50';
-                    case 'sedang': return '#FF9800';
-                    case 'buruk': return '#F44336';
-                    default: return '#9E9E9E';
                 }
             }
-    
-            // Create custom icon for each officer
-            officers.forEach(officer => {
-                const officerIcon = L.divIcon({
-                    html: `<img src="${officer.image}" width="50" height="50" class="officer-marker">`,
-                    className: '',
-                    iconSize: [50, 50],
-                    iconAnchor: [25, 25]
-                });
-    
-                // Create enhanced popup content
-                const popupContent = `
-                    <div class="officer-popup">
-                        <img src="${officer.image}" class="officer-avatar" alt="${officer.name}">
-                        <h3 class="officer-name">${officer.name}</h3>
-                        <div class="officer-id">${officer.no_seri}</div>
-                        
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <div class="info-label">Suhu</div>
-                                <div class="info-value">${officer.temperature}</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Kualitas Udara</div>
-                                <div class="info-value" style="color: ${getAirQualityColor(officer.airQuality)}">
-                                    ${officer.airQuality}
-                                </div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Status</div>
-                                <div class="info-value" style="color: #4CAF50">
-                                    ● ${officer.status}
-                                </div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Update Terakhir</div>
-                                <div class="info-value">${officer.lastUpdate}</div>
-                            </div>
-                        </div>
-                        
-                        <div class="coordinates">
-                            📍 ${officer.position[0].toFixed(4)}, ${officer.position[1].toFixed(4)}
+        };
+
+        // Initialize base layers
+        const baseLayers = {};
+        Object.entries(mapLayers.baseLayerConfig).forEach(([name, config]) => {
+            baseLayers[name] = L.tileLayer(config.url, { attribution: config.attribution });
+        });
+
+        // Add default layer and controls
+        baseLayers["OpenStreetMap"].addTo(map);
+        L.control.layers(baseLayers).addTo(map);
+        L.control.scale().addTo(map);
+
+        return map;
+    }
+
+    // Current location marker configuration
+    function addCurrentLocationMarker(map, position) {
+        const currentLocationIcon = L.divIcon({
+            html: `<div style="
+                background-color: #2196F3;
+                border: 3px solid white;
+                border-radius: 50%;
+                width: 20px;
+                height: 20px;
+                box-shadow: 0 0 10px rgba(33,150,243,0.5);
+            "></div>`,
+            className: '',
+            iconSize: [20, 20],
+            iconAnchor: [10, 10]
+        });
+
+        const currentLocation = L.marker([position.coords.latitude, position.coords.longitude], {
+            icon: currentLocationIcon
+        }).addTo(map);
+
+        // Add radius circle
+        L.circle([position.coords.latitude, position.coords.longitude], {
+            color: '#2196F3',
+            fillColor: '#2196F3',
+            fillOpacity: 0.1,
+            radius: 6000
+        }).addTo(map);
+
+        // Add popup
+        currentLocation.bindPopup(`
+            <div class="officer-popup">
+                <h3 class="officer-name">Lokasi Anda</h3>
+                <div class="coordinates">
+                    📍 ${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)}
+                </div>
+            </div>
+        `);
+    }
+
+    // Officer marker configuration
+    function addOfficerMarkers(map, position) {
+        const officers = [
+            {
+                name: 'Officer Ahmad Rizki',
+                no_seri: 'PTG001',
+                position: [position.coords.latitude + 0.001, position.coords.longitude + 0.001],
+                image: 'https://randomuser.me/api/portraits/men/1.jpg',
+                temperature: '32°C',
+                airQuality: 'Baik',
+                status: 'Online',
+                lastUpdate: '2 menit yang lalu'
+            },
+            {
+                name: 'Officer Sari Dewi',
+                no_seri: 'PTG002',
+                position: [position.coords.latitude - 0.001, position.coords.longitude + 0.001],
+                image: 'https://randomuser.me/api/portraits/women/2.jpg',
+                temperature: '30°C',
+                airQuality: 'Sedang',
+                status: 'Online',
+                lastUpdate: '5 menit yang lalu'
+            },
+            {
+                name: 'Officer Budi Santoso',
+                no_seri: 'PTG003',
+                position: [position.coords.latitude, position.coords.longitude - 0.001],
+                image: 'https://randomuser.me/api/portraits/men/3.jpg',
+                temperature: '33°C',
+                airQuality: 'Baik',
+                status: 'Online',
+                lastUpdate: '1 menit yang lalu'
+            }
+        ];
+
+        officers.forEach(officer => createOfficerMarker(map, officer));
+    }
+
+    // Create individual officer marker
+    function createOfficerMarker(map, officer) {
+        const officerIcon = L.divIcon({
+            html: `<img src="${officer.image}" width="50" height="50" class="officer-marker">`,
+            className: '',
+            iconSize: [50, 50],
+            iconAnchor: [25, 25]
+        });
+
+        L.marker(officer.position, {icon: officerIcon})
+            .bindPopup(createOfficerPopup(officer), {
+                maxWidth: 300,
+                className: 'custom-popup'
+            })
+            .addTo(map);
+    }
+
+    // Create officer popup content
+    function createOfficerPopup(officer) {
+        const getAirQualityColor = quality => {
+            const colors = {
+                'baik': '#4CAF50',
+                'sedang': '#FF9800',
+                'buruk': '#F44336'
+            };
+            return colors[quality.toLowerCase()] || '#9E9E9E';
+        };
+
+        return `
+            <div class="officer-popup">
+                <img src="${officer.image}" class="officer-avatar" alt="${officer.name}">
+                <h3 class="officer-name">${officer.name}</h3>
+                <div class="officer-id">${officer.no_seri}</div>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Suhu</div>
+                        <div class="info-value">${officer.temperature}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Kualitas Udara</div>
+                        <div class="info-value" style="color: ${getAirQualityColor(officer.airQuality)}">
+                            ${officer.airQuality}
                         </div>
                     </div>
-                `;
-    
-                // Add marker with enhanced popup
-                L.marker(officer.position, {icon: officerIcon})
-                    .bindPopup(popupContent, {
-                        maxWidth: 300,
-                        className: 'custom-popup'
-                    })
-                    .addTo(map);
-            });
-    
-            // Add a scale control
-            L.control.scale().addTo(map);
-        </script>
+                    <div class="info-item">
+                        <div class="info-label">Status</div>
+                        <div class="info-value" style="color: #4CAF50">
+                            ● ${officer.status}
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Update Terakhir</div>
+                        <div class="info-value">${officer.lastUpdate}</div>
+                    </div>
+                </div>
+                
+                <div class="coordinates">
+                    📍 ${officer.position[0].toFixed(4)}, ${officer.position[1].toFixed(4)}
+                </div>
+            </div>
+        `;
+    }
+
+    // Initialize application
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+            const map = initMap(position);
+            addCurrentLocationMarker(map, position);
+            addOfficerMarkers(map, position);
+        });
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
+</script>
     </div>
 </div>
