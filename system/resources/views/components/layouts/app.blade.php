@@ -199,8 +199,9 @@
     <script src="{{ url('public/admin/dist/js/jquery-3.7.1.min.js') }}"></script>
 
 
-    @stack('scripts')
     <script src="{{ url('public/fontawesome-free-6.7.2-web/js/all.js') }}"></script>
+    <script src="{{ url('public/charts/apexcharts.js') }}"></script>
+    @stack('scripts')
   </body>
   <!--end::Body-->
 </html>

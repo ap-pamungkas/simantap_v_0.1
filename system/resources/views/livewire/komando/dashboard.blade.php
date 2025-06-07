@@ -158,13 +158,17 @@
         </div>
     </div>
 
-<!-- ApexCharts CDN (for existing charts) -->
+@push('scripts')
+    <!-- ApexCharts CDN (for existing charts) -->
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-<!-- Leaflet CSS and JS -->
+{{-- <!-- Leaflet CSS and JS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <!-- Leaflet Heatmap Plugin -->
-<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script> --}}
+<link rel="stylesheet" href="{{ url('public/leaflet/leaflet.css') }}" />
+<script src="{{ url('public/leaflet/leaflet.js') }}"></script>
+<script src="{{ url('public/leaflet/leaflet-heat.js') }}"></script>
 
 <script>
     // Temperature Chart (unchanged)
@@ -341,4 +345,5 @@
         }
     }).addTo(co2Map);
 </script>
+@endpush
 </div>
