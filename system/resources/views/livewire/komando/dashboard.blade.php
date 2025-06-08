@@ -1,5 +1,4 @@
 <div>
-
     <div class="row">
         <!-- Summary Cards -->
         <div class="col-md-4">
@@ -51,7 +50,7 @@
                                 <a href="#" data-toggle="card-collapse" class="btn">
                                     <i class="fas fa-minus"></i>
                                 </a>
-                                <a href="#" data-toggle="card-expand" class="btn">
+                                <a href="#" class="btn expand-btn">
                                     <i class="fas fa-expand"></i>
                                 </a>
                                 <a href="#" data-toggle="card-remove" class="btn">
@@ -62,7 +61,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div id="temperatureChart"></div>
+                    <div id="temperatureChart" class="chart-container"></div>
                 </div>
             </div>
         </div>
@@ -79,7 +78,7 @@
                                 <a href="#" data-toggle="card-collapse" class="btn">
                                     <i class="fas fa-minus"></i>
                                 </a>
-                                <a href="#" data-toggle="card-expand" class="btn">
+                                <a href="#" class="btn expand-btn">
                                     <i class="fas fa-expand"></i>
                                 </a>
                                 <a href="#" data-toggle="card-remove" class="btn">
@@ -90,7 +89,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div id="co2Chart"></div>
+                    <div id="co2Chart" class="chart-container"></div>
                 </div>
             </div>
         </div>
@@ -111,7 +110,7 @@
                                 <a href="#" data-toggle="card-collapse" class="btn">
                                     <i class="fas fa-minus"></i>
                                 </a>
-                                <a href="#" data-toggle="card-expand" class="btn">
+                                <a href="#" class="btn expand-btn">
                                     <i class="fas fa-expand"></i>
                                 </a>
                                 <a href="#" data-toggle="card-remove" class="btn">
@@ -123,13 +122,13 @@
                 </div>
                 <div class="card-body">
                     <div class="position-relative">
-                        <div id="temperatureMap" style="height: 350px;"></div>
+                        <div id="temperatureMap" class="map-container" style="height: 350px;"></div>
                     </div>
                 </div>
             </div>
         </div>
         <!-- CO2 Heatmap Map -->
-        <div class="col-md--12">
+        <div class="col-md-12">
             <div class="card mb-4 shadow-sm">
                 <div class="card-header">
                     <div class="row">
@@ -141,7 +140,7 @@
                                 <a href="#" data-toggle="card-collapse" class="btn">
                                     <i class="fas fa-minus"></i>
                                 </a>
-                                <a href="#" data-toggle="card-expand" class="btn">
+                                <a href="#" class="btn expand-btn">
                                     <i class="fas fa-expand"></i>
                                 </a>
                                 <a href="#" data-toggle="card-remove" class="btn">
@@ -152,7 +151,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div id="co2Map" style="height: 350px;"></div>
+                    <div id="co2Map" class="map-container" style="height: 350px;"></div>
                 </div>
             </div>
         </div>
@@ -161,17 +160,56 @@
 @push('scripts')
     <!-- ApexCharts CDN (for existing charts) -->
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-{{-- <!-- Leaflet CSS and JS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<!-- Leaflet Heatmap Plugin -->
-<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script> --}}
 <link rel="stylesheet" href="{{ url('public/leaflet/leaflet.css') }}" />
 <script src="{{ url('public/leaflet/leaflet.js') }}"></script>
 <script src="{{ url('public/leaflet/leaflet-heat.js') }}"></script>
 
+<style>
+.card.expanded {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    background-color: black;
+    margin: 0;
+    border-radius: 0;
+}
+
+.card.expanded .chart-container {
+    height: calc(100vh - 100px) !important;
+}
+
+.card.expanded .map-container {
+    height: calc(100vh - 100px) !important;
+}
+</style>
+
 <script>
-    // Temperature Chart (unchanged)
+    // Add expand functionality
+    document.querySelectorAll('.expand-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const card = this.closest('.card');
+            card.classList.toggle('expanded');
+            
+            // Update charts and maps when expanded
+            if (card.classList.contains('expanded')) {
+                if (temperatureChart) temperatureChart.updateOptions({ chart: { height: '100%' }});
+                if (co2Chart) co2Chart.updateOptions({ chart: { height: '100%' }});
+                if (temperatureMap) temperatureMap.invalidateSize();
+                if (co2Map) co2Map.invalidateSize();
+            } else {
+                if (temperatureChart) temperatureChart.updateOptions({ chart: { height: 350 }});
+                if (co2Chart) co2Chart.updateOptions({ chart: { height: 350 }});
+                if (temperatureMap) temperatureMap.invalidateSize();
+                if (co2Map) co2Map.invalidateSize();
+            }
+        });
+    });
+
+    // Temperature Chart config
     var temperatureOptions = {
         chart: {
             type: 'line',
@@ -188,19 +226,19 @@
         ],
         xaxis: {
             categories: @json($temperatureData['labels']),
-            title: { text: 'Tahun',
-
+            title: { 
+                text: 'Tahun',
                 style: {
                     fontSize: '14px',
                     color: '#f2f2f2',
                     fontWeight: 'bold',
                     fontFamily: 'Arial, sans-serif',
-
-                    }
-             }
+                }
+            }
         },
         yaxis: {
-            title: { text: 'Suhu (°C)' ,
+            title: { 
+                text: 'Suhu (°C)',
                 style: {
                     fontSize: '14px',
                     color: '#f2f2f2',
@@ -230,7 +268,7 @@
     var temperatureChart = new ApexCharts(document.querySelector("#temperatureChart"), temperatureOptions);
     temperatureChart.render();
 
-    // CO2 Chart (unchanged)
+    // CO2 Chart config
     var co2Options = {
         chart: {
             type: 'line',
@@ -274,12 +312,11 @@
     co2Chart.render();
 
     // Temperature Heatmap Map
-    var temperatureMap = L.map('temperatureMap').setView([-1.8500, 109.9667], 13); // Centered on Ketapang
+    var temperatureMap = L.map('temperatureMap').setView([-1.8500, 109.9667], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(temperatureMap);
 
-    // Combine temperature data into heatmap points (lat, lng, intensity)
     var temperaturePoints = [];
     var tempSeries = [
         @json($temperatureData['data1']),
@@ -302,20 +339,19 @@
         blur: 15,
         maxZoom: 17,
         gradient: {
-            0.0: '#00A1D6', // Low (blue)
-            0.5: '#FFD700', // Moderate (yellow)
-            0.75: '#FF5733', // High (orange)
-            1.0: '#C70039'  // Extreme (red)
+            0.0: '#00A1D6',
+            0.5: '#FFD700',
+            0.75: '#FF5733',
+            1.0: '#C70039'
         }
     }).addTo(temperatureMap);
 
     // CO2 Heatmap Map
-    var co2Map = L.map('co2Map').setView([-1.8500, 109.9667], 13); // Centered on Ketapang
+    var co2Map = L.map('co2Map').setView([-1.8500, 109.9667], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(co2Map);
 
-    // Combine CO2 data into heatmap points (lat, lng, intensity)
     var co2Points = [];
     var co2Series = [
         @json($co2Data['data1']),
@@ -338,10 +374,10 @@
         blur: 15,
         maxZoom: 17,
         gradient: {
-            0.0: '#00A1D6', // Low (blue)
-            0.5: '#FFD700', // Moderate (yellow)
-            0.75: '#FF5733', // High (orange)
-            1.0: '#C70039'  // Extreme (red)
+            0.0: '#00A1D6',
+            0.5: '#FFD700',
+            0.75: '#FF5733',
+            1.0: '#C70039'
         }
     }).addTo(co2Map);
 </script>

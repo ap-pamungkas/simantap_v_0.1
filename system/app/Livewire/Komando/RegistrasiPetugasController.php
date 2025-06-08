@@ -103,6 +103,7 @@ class RegistrasiPetugasController extends Component
             ->get()
             ->map(fn($log) => $this->mapConfirmedDevice($log))
             ->toArray();
+            
     }
 
     #[Layout('components.layouts.komando')]
@@ -179,7 +180,7 @@ class RegistrasiPetugasController extends Component
             'nama_petugas' => $log->petugas->nama ?? '-',
             'kualitas_udara' => $latestLog->kualitas_udara ?? '-',
             'suhu' => $latestLog->suhu ?? '-',
-            'foto' => $log->petugas->foto ? url('system/storage/app/public/' . $log->petugas->foto) : 'https://via.placeholder.com/100x100',
+            'foto' =>url('system/storage/app/public/' . $log->petugas->foto) 
         ];
     }
 }

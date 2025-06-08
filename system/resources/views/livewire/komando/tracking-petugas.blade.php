@@ -1,6 +1,5 @@
 <div>
     <div>
-
         @livewireStyles
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
@@ -26,11 +25,11 @@
 
             /* Enhanced popup styles */
             .leaflet-popup-content-wrapper {
-                background: linear-gradient(135deg, #34363d 0%, #4b6ea2 100%);
+                background: linear-gradient(135deg, #34363d 0%, #4b6ea2 100%) !important;
                 color: white;
-                border-radius: 16px;
+                border-radius: 0px;
                 box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-                border: 1px solid rgba(255, 255, 255, 0.2);
+                border: 2px solid rgba(255, 255, 255, 0.2);
                 backdrop-filter: blur(10px);
             }
 
@@ -73,7 +72,7 @@
                 opacity: 0.8;
                 background: rgba(255, 255, 255, 0.2);
                 padding: 4px 12px;
-                border-radius: 20px;
+                border-radius: 0px;
                 display: inline-block;
                 margin-bottom: 15px;
             }
@@ -88,7 +87,7 @@
             .info-item {
                 background: rgba(255, 255, 255, 0.15);
                 padding: 10px;
-                border-radius: 8px;
+                border-radius: 0px;
                 backdrop-filter: blur(5px);
             }
 
@@ -107,14 +106,14 @@
                 margin-top: 15px;
                 padding: 10px;
                 background: rgba(0, 0, 0, 0.2);
-                border-radius: 8px;
+                border-radius: 0px;
                 font-size: 12px;
                 font-family: monospace;
             }
 
             /* Layer control styling */
             .leaflet-control-layers {
-                border-radius: 10px;
+                border-radius: 0px;
                 box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
                 border: 1px solid rgba(255, 255, 255, 0.2);
             }
@@ -212,53 +211,25 @@
         `);
             }
 
-            // Officer marker configuration
+            // Officer markers configuration
             function addOfficerMarkers(map, position) {
-                const officers = [{
-                        name: 'Officer Ahmad Rizki',
-                        no_seri: 'PTG001',
-                        position: [position.coords.latitude + 0.001, position.coords.longitude + 0.001],
-                        image: 'https://randomuser.me/api/portraits/men/1.jpg',
-                        temperature: '32°C',
-                        airQuality: 'Baik',
-                        status: 'Online',
-                        lastUpdate: '2 menit yang lalu'
-                    },
-                    {
-                        name: 'Officer Sari Dewi',
-                        no_seri: 'PTG002',
-                        position: [position.coords.latitude - 0.001, position.coords.longitude + 0.001],
-                        image: 'https://randomuser.me/api/portraits/women/2.jpg',
-                        temperature: '30°C',
-                        airQuality: 'Sedang',
-                        status: 'Online',
-                        lastUpdate: '5 menit yang lalu'
-                    },
-                    {
-                        name: 'Officer Budi Santoso',
-                        no_seri: 'PTG003',
-                        position: [position.coords.latitude, position.coords.longitude - 0.001],
-                        image: 'https://randomuser.me/api/portraits/men/3.jpg',
-                        temperature: '33°C',
-                        airQuality: 'Baik',
-                        status: 'Online',
-                        lastUpdate: '1 menit yang lalu'
-                    }
-                ];
-
+                const officers = @json($inactivePetugas);
+               
                 officers.forEach(officer => createOfficerMarker(map, officer));
             }
 
             // Create individual officer marker
             function createOfficerMarker(map, officer) {
+                // if (!officer.last_log) return; // Skip if no log data
+
                 const officerIcon = L.divIcon({
-                    html: `<img src="${officer.image}" width="50" height="50" class="officer-marker">`,
+                    html: `<img src="https://randomuser.me/api/portraits/men/1.jpg" width="50" height="50" class="officer-marker">`,
                     className: '',
                     iconSize: [50, 50],
                     iconAnchor: [25, 25]
                 });
 
-                L.marker(officer.position, {
+                L.marker([officer.last_log.latitude, officer.last_log.longitude], {
                         icon: officerIcon
                     })
                     .bindPopup(createOfficerPopup(officer), {
@@ -270,46 +241,43 @@
 
             // Create officer popup content
             function createOfficerPopup(officer) {
-                const getAirQualityColor = quality => {
-                    const colors = {
-                        'baik': '#4CAF50',
-                        'sedang': '#FF9800',
-                        'buruk': '#F44336'
-                    };
-                    return colors[quality.toLowerCase()] || '#9E9E9E';
+                const getAirQualityColor = value => {
+                    if (value <= 50) return '#4CAF50';
+                    if (value <= 100) return '#FF9800';
+                    return '#F44336';
                 };
 
                 return `
             <div class="officer-popup">
-                <img src="${officer.image}" class="officer-avatar" alt="${officer.name}">
-                <h3 class="officer-name">${officer.name}</h3>
-                <div class="officer-id">${officer.no_seri}</div>
+                <img src="https://randomuser.me/api/portraits/men/1.jpg" class="officer-avatar" alt="${officer.petugas.nama}">
+                <h3 class="officer-name">${officer.petugas.nama}</h3>
+                <div class="officer-id">${officer.perangkat.no_seri}</div>
                 
                 <div class="info-grid">
                     <div class="info-item">
                         <div class="info-label">Suhu</div>
-                        <div class="info-value">${officer.temperature}</div>
+                        <div class="info-value">${officer.last_log.suhu}°C</div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Kualitas Udara</div>
-                        <div class="info-value" style="color: ${getAirQualityColor(officer.airQuality)}">
-                            ${officer.airQuality}
+                        <div class="info-value" style="color: ${getAirQualityColor(officer.last_log.kualitas_udara)}">
+                            ${officer.last_log.kualitas_udara}
                         </div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Status</div>
                         <div class="info-value" style="color: #4CAF50">
-                            ● ${officer.status}
+                            ● ${officer.status ? 'Aktif' : 'Tidak Aktif'}
                         </div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Update Terakhir</div>
-                        <div class="info-value">${officer.lastUpdate}</div>
+                        <div class="info-value">${officer.last_log.timestamp}</div>
                     </div>
                 </div>
                 
                 <div class="coordinates">
-                    📍 ${officer.position[0].toFixed(4)}, ${officer.position[1].toFixed(4)}
+                    📍 ${officer.last_log.latitude.toFixed(4)}, ${officer.last_log.longitude.toFixed(4)}
                 </div>
             </div>
         `;
@@ -317,14 +285,52 @@
 
             // Initialize application
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(position => {
-                    const map = initMap(position);
-                    addCurrentLocationMarker(map, position);
-                    addOfficerMarkers(map, position);
-                });
-            } else {
-                alert("Geolocation is not supported by this browser.");
-            }
+    navigator.geolocation.getCurrentPosition(position => {
+        const map = initMap(position);
+        addCurrentLocationMarker(map, position);
+        
+        // Debug output to check officers data
+        const officers = @json($inactivePetugas);
+        console.log("=== DEBUG INFO ===");
+        console.log("Total officers received:", officers ? officers.length : 0);
+        console.log("Officers data:", officers);
+        
+        // Add validation before creating markers dengan detail debugging
+        if (officers && officers.length > 0) {
+            let successCount = 0;
+            let failCount = 0;
+            
+            officers.forEach((officer, index) => {
+                console.log(`Processing officer ${index + 1}:`, officer);
+                
+                if (officer && officer.last_log && officer.last_log.latitude && officer.last_log.longitude) {
+                    console.log(`✓ Creating marker for officer: ${officer.petugas.nama}`);
+                    createOfficerMarker(map, officer);
+                    successCount++;
+                } else {
+                    console.log(`✗ Skipping officer due to missing data:`, {
+                        hasOfficer: !!officer,
+                        hasLastLog: !!(officer && officer.last_log),
+                        hasCoordinates: !!(officer && officer.last_log && officer.last_log.latitude && officer.last_log.longitude),
+                        officer: officer
+                    });
+                    failCount++;
+                }
+            });
+            
+            console.log(`=== SUMMARY ===`);
+            console.log(`Successfully created ${successCount} markers`);
+            console.log(`Failed to create ${failCount} markers`);
+        } else {
+            console.log("No officers data available or empty array");
+        }
+    });
+} else {
+    alert("Geolocation is not supported by this browser.");
+}
+
+
+            
         </script>
     </div>
 </div>

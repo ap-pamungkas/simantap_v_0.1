@@ -71,7 +71,7 @@
 		<!-- BEGIN theme-panel -->
 		<div class="app-theme-panel">
 			<div class="app-theme-panel-container">
-				<a href="#" data-toggle="theme-panel-expand" class="app-theme-toggle-btn"><i class="fa fa-gear "></i></a>
+				<a style="text-decoration: none;" href="#" data-toggle="theme-panel-expand" class="app-theme-toggle-btn"><i class="fa fa-gear "></i></a>
 				<div class="app-theme-panel-content">
 					<div class="fs-10px fw-semibold text-white">
 						THEME COLOR

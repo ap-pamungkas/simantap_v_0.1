@@ -18,12 +18,12 @@ class LogPetugas extends Model
 
     public function petugas()
     {
-        return $this->belongsTo(Petugas::class, 'id_petugas', 'id');
+        return $this->belongsTo(Petugas::class, 'petugas_id', 'id');
     }
 
     public  function perangkat()
     {
-        return $this->belongsTo(Perangkat::class, 'id_perangkat', 'id');
+        return $this->belongsTo(Perangkat::class, 'perangkat_id', 'id');
     }
 
 

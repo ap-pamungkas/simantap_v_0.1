@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('log_petugas', function (Blueprint $table) {
             $table->id();
-            $table->char('id_perangkat', 36);
-            $table->foreign('id_perangkat')->references('id')->on('perangkat')->onDelete('cascade');
-            $table->foreignId('id_petugas')->constrained('petugas')->onDelete('cascade');
+            $table->char('perangkat_id', 36);
+            $table->foreign('perangkat_id')->references('id')->on('perangkat')->onDelete('cascade');
+            $table->foreignId('petugas_id')->constrained('petugas')->onDelete('cascade');
             $table->boolean('status')->default(false);
             $table->timestamps();
 
