@@ -8,6 +8,8 @@ use App\Models\Petugas;
 use App\Models\Perangkat;
 use App\Models\LogPetugas;
 use App\Models\LogPerangkat;
+use App\Models\Insiden;
+use App\Models\InsidenDetail;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -27,6 +29,8 @@ class DatabaseSeeder extends Seeder
         $this->seedPerangkat();
         $this->seedLogPetugas();
         $this->seedLogPerangkat();
+        $this->seedInsiden();
+        $this->seedInsidenDetails();
         $this->seedAdminUser();
     }
 
@@ -85,7 +89,7 @@ class DatabaseSeeder extends Seeder
                 'id' => $uuid,
                 'no_seri' => $noSeri,
                 'qr_code' => $noSeri,
-                'status' => $i <= 9 ? 'Aktif': 'Tidak Aktif', // 1 untuk aktif, 0 untuk tidak aktif
+                'status' => $i <= 9 ? 'Aktif': 'Tidak Aktif',
                 'kondisi' => $i <= 9 ? 'Baik' : 'Rusak',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -106,7 +110,6 @@ class DatabaseSeeder extends Seeder
         $targetCount = 9;
         $currentCount = 0;
 
-        // Pastikan kita punya cukup data
         while ($currentCount < $targetCount && count($usedCombinations) < (count($perangkatIds) * count($petugasIds))) {
             $perangkatId = $perangkatIds[array_rand($perangkatIds)];
             $petugasId = $petugasIds[array_rand($petugasIds)];
@@ -114,9 +117,9 @@ class DatabaseSeeder extends Seeder
 
             if (!in_array($combination, $usedCombinations)) {
                 LogPetugas::create([
-                    'perangkat_id' => $perangkatId, // PERBAIKAN: gunakan perangkat_id
-                    'petugas_id' => $petugasId,     // PERBAIKAN: gunakan petugas_id
-                    'status' => 0, // 0 untuk inactive (yang akan ditampilkan di tracking)
+                    'perangkat_id' => $perangkatId,
+                    'petugas_id' => $petugasId,    
+                    'status' => 0,
                     'created_at' => now()->subDays(rand(1, 7)),
                     'updated_at' => now()->subDays(rand(0, 3)),
                 ]);
@@ -127,19 +130,17 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        // Create some active log entries (status = 1)
         $activeCount = min(3, count($perangkatIds));
         for ($i = 0; $i < $activeCount; $i++) {
             $perangkatId = $perangkatIds[$i];
             $petugasId = $petugasIds[$i];
             $combination = $perangkatId . '-' . $petugasId;
 
-            // Pastikan tidak duplikat dengan inactive log
             if (!in_array($combination, $usedCombinations)) {
                 LogPetugas::create([
                     'perangkat_id' => $perangkatId,
                     'petugas_id' => $petugasId,
-                    'status' => 1, // 1 untuk active
+                    'status' => 1,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
@@ -155,11 +156,9 @@ class DatabaseSeeder extends Seeder
      */
     private function seedLogPerangkat(): void
     {
-        // Buat log perangkat untuk semua perangkat yang ada di log_petugas
         $perangkatIdsInLog = LogPetugas::pluck('perangkat_id')->unique()->toArray();
 
         foreach ($perangkatIdsInLog as $perangkatId) {
-            // Buat beberapa log untuk setiap perangkat
             for ($day = 0; $day < 7; $day++) {
                 $timePoints = [8, 12, 16, 20];
                 foreach ($timePoints as $hour) {
@@ -176,24 +175,21 @@ class DatabaseSeeder extends Seeder
      */
     private function createLogPerangkat(string $perangkatId, $createdAt, $updatedAt, ?int $hour = null): void
     {
-        // Koordinat dasar untuk Ketapang
         $baseLat = -1.8467;
         $baseLong = 109.9719;
         
-        // Variasi lokasi dalam radius yang wajar
-        $latVariation = (rand(-50, 50) / 1000); // Variasi ±0.05 derajat
+        $latVariation = (rand(-50, 50) / 1000);
         $longVariation = (rand(-50, 50) / 1000);
 
         $kualitasUdara = rand(30, 200);
         $status ='Aktif';
 
-        // Simulasi suhu berdasarkan jam
-        $baseTemp = 27; // Suhu dasar Ketapang
+        $baseTemp = 27;
         if ($hour) {
-            if ($hour >= 6 && $hour < 10) $tempVariation = rand(-2, 1); // Pagi sejuk
-            elseif ($hour >= 10 && $hour < 15) $tempVariation = rand(3, 8); // Siang panas
-            elseif ($hour >= 15 && $hour < 18) $tempVariation = rand(1, 5); // Sore
-            else $tempVariation = rand(-3, 2); // Malam
+            if ($hour >= 6 && $hour < 10) $tempVariation = rand(-2, 1);
+            elseif ($hour >= 10 && $hour < 15) $tempVariation = rand(3, 8);
+            elseif ($hour >= 15 && $hour < 18) $tempVariation = rand(1, 5);
+            else $tempVariation = rand(-3, 2);
         } else {
             $tempVariation = rand(-3, 8);
         }
@@ -210,6 +206,67 @@ class DatabaseSeeder extends Seeder
             'created_at' => $createdAt,
             'updated_at' => $updatedAt,
         ]);
+    }
+
+    /**
+     * Seed insiden data
+     */
+    private function seedInsiden(): void 
+    {
+        $namaInsiden = [
+            'Kebakaran Hutan',
+            'Banjir',
+            'Tanah Longsor',
+            'Angin Puting Beliung',
+            'Gempa Bumi'
+        ];
+
+        $lokasi = [
+            'Kecamatan Delta Pawan',
+            'Kecamatan Benua Kayong', 
+            'Kecamatan Muara Pawan',
+            'Kecamatan Kendawangan',
+            'Kecamatan Matan Hilir Utara'
+        ];
+
+        for ($i = 0; $i < 10; $i++) {
+            $createdAt = now()->subDays(rand(1, 30));
+            
+            Insiden::create([
+                'nama_insiden' => $namaInsiden[array_rand($namaInsiden)],
+                'lokasi' => $lokasi[array_rand($lokasi)],
+                'keterangan' => 'Keterangan insiden ' . ($i + 1) . ' yang terjadi di wilayah Ketapang',
+                'created_at' => $createdAt,
+                'updated_at' => $createdAt->addHours(rand(1, 48))
+            ]);
+        }
+    }
+    /**
+     * Seed insiden details data
+     */
+    private function seedInsidenDetails(): void
+    {
+        $insidenIds = Insiden::pluck('id')->toArray();
+        $logPetugasIds = LogPetugas::where('status', 1)->pluck('id')->toArray();
+
+        // Setiap insiden memiliki 1-3 detail
+        foreach ($insidenIds as $insidenId) {
+            $detailCount = rand(1, 3);
+            
+            for ($i = 0; $i < $detailCount; $i++) {
+                if (count($logPetugasIds) > 0) {
+                    $logPetugasId = $logPetugasIds[array_rand($logPetugasIds)];
+                    
+                    InsidenDetail::create([
+                        'insiden_id' => $insidenId,
+                        'LogPetugas_id' => $logPetugasId,
+                        'deleted_at' => null,
+                        'created_at' => now()->subDays(rand(0, 7)),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+        }
     }
 
     /**

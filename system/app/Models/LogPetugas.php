@@ -31,4 +31,10 @@ class LogPetugas extends Model
 {
     return $this->hasManyThrough(LogPerangkat::class, Perangkat::class, 'id', 'perangkat_id', 'id_perangkat', 'id');
 }
+
+public function insidenDetail()
+{
+    return $this->hasMany(InsidenDetail::class, 'LogPetugas_id', 'id');
+}
+
 }
