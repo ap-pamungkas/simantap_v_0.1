@@ -19,9 +19,6 @@ class DatabaseSeeder extends Seeder
     private $perangkatIds = [];
     private $perangkatWithInactiveLog = [];
 
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
         $this->seedJabatan();
@@ -34,9 +31,6 @@ class DatabaseSeeder extends Seeder
         $this->seedAdminUser();
     }
 
-    /**
-     * Seed jabatan data.
-     */
     private function seedJabatan(): void
     {
         $jabatan = [
@@ -52,9 +46,6 @@ class DatabaseSeeder extends Seeder
         }
     }
 
-    /**
-     * Seed petugas data.
-     */
     private function seedPetugas(): void
     {
         $petugas = [
@@ -69,17 +60,28 @@ class DatabaseSeeder extends Seeder
             ['nama' => 'Yudi Prasetyo', 'alamat' => 'Jl. Sudirman No. 134, Ketapang', 'jabatan_id' => 1, 'tgl_lahir' => '1986-09-30', 'jenis_kelamin' => 'Laki-laki', 'foto' => 'default.jpg', 'status' => 'Aktif'],
         ];
 
+        // Generate additional petugas to reach 30
+        $additionalCount = 30 - count($petugas);
+        for ($i = 1; $i <= $additionalCount; $i++) {
+            $petugas[] = [
+                'nama' => 'Petugas ' . ($i + count($petugas)),
+                'alamat' => 'Jl. Contoh No. ' . ($i * 10) . ', Ketapang',
+                'jabatan_id' => rand(1, 5),
+                'tgl_lahir' => now()->subYears(rand(25, 50))->format('Y-m-d'),
+                'jenis_kelamin' => rand(0, 1) ? 'Laki-laki' : 'Perempuan',
+                'foto' => 'default.jpg',
+                'status' => rand(0, 10) > 2 ? 'Aktif' : 'Tidak Aktif',
+            ];
+        }
+
         foreach ($petugas as $ptg) {
             Petugas::create($ptg);
         }
     }
 
-    /**
-     * Seed perangkat data.
-     */
     private function seedPerangkat(): void
     {
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 1; $i <= 20; $i++) {
             $uuid = Str::uuid()->toString();
             $yearMonth = date('Ym');
             $randomCode = strtoupper(Str::random(6));
@@ -89,74 +91,77 @@ class DatabaseSeeder extends Seeder
                 'id' => $uuid,
                 'no_seri' => $noSeri,
                 'qr_code' => $noSeri,
-                'status' => $i <= 9 ? 'Aktif': 'Tidak Aktif',
-                'kondisi' => $i <= 9 ? 'Baik' : 'Rusak',
+                'status' => $i <= 18 ? 'Aktif' : 'Tidak Aktif',
+                'kondisi' => $i <= 18 ? 'Baik' : 'Rusak',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
         }
     }
 
-    /**
-     * Seed log petugas data - PERBAIKAN NAMA KOLOM
-     */
     private function seedLogPetugas(): void
     {
-        $perangkatIds = Perangkat::where('status', 1)->pluck('id')->toArray();
+        $perangkatIds = Perangkat::where('status', 'Aktif')->pluck('id')->toArray();
         $petugasIds = Petugas::where('status', 'Aktif')->pluck('id')->toArray();
-
-        // Create 9 inactive log entries (status = 0) for tracking
         $usedCombinations = [];
-        $targetCount = 9;
+        $usedPerangkat = [];
+        $usedPetugas = [];
+
+        // Create exactly 10 inactive log entries (status = 0) for tracking
+        $targetCount = 10;
         $currentCount = 0;
 
-        while ($currentCount < $targetCount && count($usedCombinations) < (count($perangkatIds) * count($petugasIds))) {
+        while ($currentCount < $targetCount && count($perangkatIds) > 0 && count($petugasIds) > 0) {
             $perangkatId = $perangkatIds[array_rand($perangkatIds)];
             $petugasId = $petugasIds[array_rand($petugasIds)];
             $combination = $perangkatId . '-' . $petugasId;
 
-            if (!in_array($combination, $usedCombinations)) {
+            if (!in_array($combination, $usedCombinations) && 
+                !in_array($perangkatId, $usedPerangkat) && 
+                !in_array($petugasId, $usedPetugas)) {
                 LogPetugas::create([
                     'perangkat_id' => $perangkatId,
-                    'petugas_id' => $petugasId,    
+                    'petugas_id' => $petugasId,
                     'status' => 0,
                     'created_at' => now()->subDays(rand(1, 7)),
                     'updated_at' => now()->subDays(rand(0, 3)),
                 ]);
-                
+
                 $usedCombinations[] = $combination;
+                $usedPerangkat[] = $perangkatId;
+                $usedPetugas[] = $petugasId;
                 $this->perangkatWithInactiveLog[] = $perangkatId;
                 $currentCount++;
             }
         }
 
-        $activeCount = min(3, count($perangkatIds));
-        for ($i = 0; $i < $activeCount; $i++) {
-            $perangkatId = $perangkatIds[$i];
-            $petugasId = $petugasIds[$i];
-            $combination = $perangkatId . '-' . $petugasId;
+        // Create some completed logs (status = 1) for insiden
+        $completedCount = min(5, count($perangkatIds));
+        for ($i = 0; $i < $completedCount; $i++) {
+            do {
+                $perangkatId = $perangkatIds[array_rand($perangkatIds)];
+                $petugasId = $petugasIds[array_rand($petugasIds)];
+                $combination = $perangkatId . '-' . $petugasId;
+            } while (in_array($combination, $usedCombinations));
 
-            if (!in_array($combination, $usedCombinations)) {
-                LogPetugas::create([
-                    'perangkat_id' => $perangkatId,
-                    'petugas_id' => $petugasId,
-                    'status' => 1,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
+            LogPetugas::create([
+                'perangkat_id' => $perangkatId,
+                'petugas_id' => $petugasId,
+                'status' => 1,
+                'created_at' => now()->subDays(rand(8, 30)),
+                'updated_at' => now()->subDays(rand(4, 20)),
+            ]);
+
+            $usedCombinations[] = $combination;
         }
 
         $this->perangkatIds = $perangkatIds;
         $this->perangkatWithInactiveLog = array_unique($this->perangkatWithInactiveLog);
     }
 
-    /**
-     * Seed log perangkat data (sensor data for perangkat).
-     */
     private function seedLogPerangkat(): void
     {
-        $perangkatIdsInLog = LogPetugas::pluck('perangkat_id')->unique()->toArray();
+        $perangkatIdsInLog = LogPetugas::where('status', 0)->pluck('perangkat_id')->unique()->toArray();
 
         foreach ($perangkatIdsInLog as $perangkatId) {
             for ($day = 0; $day < 7; $day++) {
@@ -170,9 +175,6 @@ class DatabaseSeeder extends Seeder
         }
     }
 
-    /**
-     * Create a single log perangkat entry.
-     */
     private function createLogPerangkat(string $perangkatId, $createdAt, $updatedAt, ?int $hour = null): void
     {
         $baseLat = -1.8467;
@@ -182,8 +184,6 @@ class DatabaseSeeder extends Seeder
         $longVariation = (rand(-50, 50) / 1000);
 
         $kualitasUdara = rand(30, 200);
-        $status ='Aktif';
-
         $baseTemp = 27;
         if ($hour) {
             if ($hour >= 6 && $hour < 10) $tempVariation = rand(-2, 1);
@@ -202,15 +202,12 @@ class DatabaseSeeder extends Seeder
             'longitude' => round($baseLong + $longVariation, 6),
             'kualitas_udara' => round($kualitasUdara, 1),
             'suhu' => round($suhu, 1),
-            'status' => "Aktif",
+            'status' => 'Aktif',
             'created_at' => $createdAt,
             'updated_at' => $updatedAt,
         ]);
     }
 
-    /**
-     * Seed insiden data
-     */
     private function seedInsiden(): void 
     {
         $namaInsiden = [
@@ -241,22 +238,22 @@ class DatabaseSeeder extends Seeder
             ]);
         }
     }
-    /**
-     * Seed insiden details data
-     */
+
     private function seedInsidenDetails(): void
     {
         $insidenIds = Insiden::pluck('id')->toArray();
         $logPetugasIds = LogPetugas::where('status', 1)->pluck('id')->toArray();
 
-        // Setiap insiden memiliki 1-3 detail
         foreach ($insidenIds as $insidenId) {
-            $detailCount = rand(1, 3);
-            
+            $detailCount = rand(1, min(3, count($logPetugasIds)));
+            $usedLogPetugas = [];
+
             for ($i = 0; $i < $detailCount; $i++) {
                 if (count($logPetugasIds) > 0) {
-                    $logPetugasId = $logPetugasIds[array_rand($logPetugasIds)];
-                    
+                    do {
+                        $logPetugasId = $logPetugasIds[array_rand($logPetugasIds)];
+                    } while (in_array($logPetugasId, $usedLogPetugas));
+
                     InsidenDetail::create([
                         'insiden_id' => $insidenId,
                         'LogPetugas_id' => $logPetugasId,
@@ -264,14 +261,13 @@ class DatabaseSeeder extends Seeder
                         'created_at' => now()->subDays(rand(0, 7)),
                         'updated_at' => now(),
                     ]);
+
+                    $usedLogPetugas[] = $logPetugasId;
                 }
             }
         }
     }
 
-    /**
-     * Seed admin user.
-     */
     private function seedAdminUser(): void
     {
         User::create([

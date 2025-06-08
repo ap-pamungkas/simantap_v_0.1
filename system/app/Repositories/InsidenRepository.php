@@ -20,7 +20,7 @@ class InsidenRepository extends Repository
     ->paginate($perPage);
     }   
     
-public function getInsidenById($id){
+public function getInsidenById($id,$perPage, $sortField = null, $sortDirection = null ){
     return Insiden::with(['insidenDetails', 'insidenDetails.logPetugas', 'insidenDetails.petugas', 'insidenDetails.perangkat', 'insidenDetails.logPerangkat'])
         ->where('id', $id)
         ->first();
