@@ -36,9 +36,11 @@
                                         <button class="btn btn-primary btn-sm" wire:click="editData({{ $jabatan->id }})" data-bs-toggle="modal" data-bs-target="#tambah">
                                             <i class="bi bi-pencil-square"></i>
                                         </button>
-                                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapus{{ $jabatan->id }}">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
+                                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#hapusModal"
+                                        wire:click="confirmDelete({{ $jabatan->id }})">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
                                     </td>
                                 </tr>
 
@@ -61,4 +63,8 @@
     <x-modals.modal button="{{ $jabatan_id ? 'Simpan Perubahan' : 'Simpan' }}" id="tambah" title="{{ $jabatan_id ? 'Edit Data Gudang' : 'Tambah Data Gudang' }}" action="saveData">
         <x-forms.input model="nama_jabatan" label="Nama Jabatan" placeholder="Nama Jabatan" />
     </x-modals.modal>
+
+    {{-- modal delete data jabatan --}}
+ 
+     <x-modals.modalhapus id="hapusModal" click="deleteData({{ $selectedId }})" />
  </div>

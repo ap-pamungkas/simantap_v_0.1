@@ -115,6 +115,9 @@ class JabatanController extends Component
 
     }
 
+    public function confirmDelete($id){
+        $this->selectedId = $id;
+     }
 
     public function deleteData($id){
         $this->jabatanRepository->deleteJabatan($id);

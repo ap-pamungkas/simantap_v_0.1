@@ -11,7 +11,7 @@
             <x-layouts.komando.menu-item url="komando/petugas" icon="fas fa-users" label="PETUGAS" />
             <x-layouts.komando.menu-item url="komando/petugas/registrasi" icon="fas fa-camera" label="REGISTRASI PETUGAS" />
             <x-layouts.komando.menu-item url="komando/perangkat" icon="fas fa-mobile" label="PERANGKAT" />
-            {{-- <x-layouts.komando.menu-item url="komando/scanner-script" icon="fas fa-chart-simple" label="ANALISIS" /> --}}
+            <x-layouts.komando.menu-item url="komando/insiden" icon="fas fa-triangle-exclamation" label="INSIDEN" />
 
 
         </div>

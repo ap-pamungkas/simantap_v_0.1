@@ -13,6 +13,7 @@ class PetugasController extends Component
     use  WithPagination;
     #[Title("Petugas")]
 
+     
     public $petugas_id,
         $nama,
         $alamat,

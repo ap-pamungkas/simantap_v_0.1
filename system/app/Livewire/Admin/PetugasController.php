@@ -18,6 +18,7 @@ class PetugasController extends Component
     use Message, WithFileUploads, WithPagination;
     #[Title("Petugas")]
 
+    public $selectedId;
     public $petugas_id,
         $nama,
         $alamat,
@@ -104,6 +105,10 @@ class PetugasController extends Component
     {
         $this->isEditMode = false;
         $this->reset(['nama', 'jabatan_id', 'alamat', 'tgl_lahir', 'jenis_kelamin', 'foto']);
+    }
+
+    public function confirmDelete($id){
+       $this->selectedId = $id;
     }
 
     public function deleteData($id){

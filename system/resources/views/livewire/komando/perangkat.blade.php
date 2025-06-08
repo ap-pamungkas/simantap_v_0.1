@@ -1,5 +1,5 @@
 <div>
-
+    <x-alerts.dispatch-message />
     <div class="card card-outline card-secondary">
         <div class="card-header">
             {{-- <button class="btn btn-success btn-sm float-end" data-bs-toggle="modal" data-bs-target="#tambah">
@@ -12,7 +12,7 @@
 
         </div>
         <div class="card-body">
-            <div wire:poll.1s class="row">
+            <div class="row">
                 <div class="table-responsive">
                     <x-table.table searching>
                         <thead>
@@ -27,7 +27,13 @@
                                 <th>
                                     Qr Code
                                 </th>
-                                <th>Status</th>
+                                <th
+                                wire:click="sortBy('status')" style="cursor: pointer;">
+                                Status 
+                                    @if ($sortField === 'status')
+                                    <i class="bi bi-sort-{{ $sortDirection === 'status' ? 'Aktif' : 'Tidak Aktif' }}"></i>
+                                @endif
+                                </th>
                                 <th>
                                     Kondisi
                                 </th>
@@ -56,21 +62,17 @@
                                     <td>{{ $devices->kondisi }}</td>
                                     <td>
                                         <button class="btn btn-secondary btn-sm"
-                                            wire:click="updateConditions({{ $devices->id }})" data-bs-toggle="modal"
-                                            data-bs-target="#tambah">
+                                            wire:click="updateConditions('{{ $devices->id }}')" data-bs-toggle="modal"
+                                            >
                                             <i class="bi bi-pencil-square"></i> Ubah Kondisi
                                         </button>
-                                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
-                                            data-bs-target="#hapus{{ $devices->id }}">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
+                                       
                                     </td>
                                 </tr>
 
-
+                               
                                 <!-- Modal Hapus Data -->
-                                <x-modals.modalhapus id="hapus{{ $devices->id }}"
-                                    click="deleteData({{ $devices->id }})" />
+                               
                             @empty
                                 <tr class="text-center">
                                     <td colspan="6">Tidak ada data untuk ditampilkan!</td>
@@ -82,6 +84,8 @@
                 </div>
             </div>
         </div>
+
+  
     </div>
 
     

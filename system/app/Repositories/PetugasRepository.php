@@ -9,20 +9,31 @@ class PetugasRepository extends Repository  {
     use QueryHelper; // Menggunakan trait Q
     public function getPetugas($search, $perPage, $sortField = null, $sortDirection = null)
     {
-        $query = Petugas::query();
+        $query = Petugas::with('jabatan'); // Eager load jabatan relationship to avoid N+1 queries 
 
         // Apply search filter if provided
         if (!empty($search)) {
-            $query->where(function ($q) use ($search) {
-                $q->where('nama', 'like', "%{$search}%")
-                    ->orWhere('foto', 'like', "%{$search}%")
-                    ->orWhere('alamat', 'like', "%{$search}%")
-                    ->orWhere('tgl_lahir', 'like', "%{$search}%")
-                    ->orWhere('jenis_kelamin', 'like', "%{$search}%")
-                    ->orWhere('status', 'like', "%{$search}%")
-                    ->orWhereHas('jabatan', function ($jabatanQuery) use ($search) {
-                        $jabatanQuery->where('nama_jabatan', 'like', "%{$search}%");
-                    });
+            $searchableFields = [
+                'nama',
+                'foto', 
+                'alamat',
+                'tgl_lahir',
+                'jenis_kelamin',
+                'status'
+            ];
+
+            $query->where(function ($q) use ($search, $searchableFields) {
+                // Build search conditions for main fields
+                $q->where(function($subQ) use ($search, $searchableFields) {
+                    foreach ($searchableFields as $field) {
+                        $subQ->orWhere($field, 'like', "%{$search}%");
+                    }
+                });
+                
+                // Search in related jabatan table
+                $q->orWhereHas('jabatan', function ($jabatanQuery) use ($search) {
+                    $jabatanQuery->where('nama_jabatan', 'like', "%{$search}%");
+                });
             });
         }
 

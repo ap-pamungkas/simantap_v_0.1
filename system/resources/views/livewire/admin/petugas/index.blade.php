@@ -51,7 +51,9 @@
                                         <button class="btn btn-warning btn-sm" wire:click="editData({{ $petugas->id }})" data-bs-toggle="modal" data-bs-target="#tambah">
                                             <i class="bi bi-pencil-square"></i>
                                         </button>
-                                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapus{{ $petugas->id }}">
+                                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#hapusModal"
+                                            wire:click="confirmDelete({{ $petugas->id }})">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </td>
@@ -59,7 +61,7 @@
 
 
                                 <!-- Modal Hapus Data -->
-                                <x-modals.modalhapus id="hapus{{ $petugas->id }}" click="deleteData({{ $petugas->id }})" />
+                              
                             @empty
                                 <tr>
                                     <td colspan="3">Tidak ada data untuk ditampilkan!</td>
@@ -72,7 +74,7 @@
             </div>
       </div>
     </div>
-
+{{-- modal save data petugas --}}
     <x-modals.modal button="{{ $petugas_id ? 'Simpan Perubahan' : 'Simpan' }}" id="tambah" size="modal-xl" title="{{ $petugas_id ? 'Edit Data Petugas' : 'Tambah Data Petugas' }}" action="saveData">
         <div class="row">
             <div class="col-md-4">
@@ -104,4 +106,8 @@
             </div>
         </div>
     </x-modals.modal>
+
+
+    {{-- modal delete data petugas --}}
+    <x-modals.modalhapus id="hapusModal" click="deleteData({{ $selectedId }})" />
  </div>

@@ -15,6 +15,7 @@ class PerangkatController extends Component
     public $selectedId;
     public $no_seri;
     public $isEditMode = false;
+    public $showModal = false;
 
     public $search = '';
 
@@ -37,10 +38,11 @@ class PerangkatController extends Component
     }
     private $perangkatRepository;
 
-    public function boot(PerangkatRepository $perangkatRepository)
-    {
-        $this->perangkatRepository = $perangkatRepository;
-    }
+  public function boot(PerangkatRepository $perangkatRepository)
+  {
+    $this->perangkatRepository = $perangkatRepository;
+  }
+    
 
     #[Title("Perangkat")]
     public function render()
@@ -50,7 +52,8 @@ class PerangkatController extends Component
             $this->search,
             $this->perPage,
             $this->sortField,
-            $this->sortDirection
+            $this->sortDirection,
+            ['Baik', 'Rusak']
         );
 
 
@@ -62,11 +65,14 @@ class PerangkatController extends Component
 
 
 
-
-
+public function confirmDelete($id){
+   $this->selectedId = $id;
+}
     public function deleteData($id)
     {
+        // dd($id);
         $this->perangkatRepository->deleteDevices($id);
+       
         $this->dispatchSuccesMassage('data berhasil di hapus');
         $this->js('
             $(".modal").modal("hide")
@@ -77,9 +83,9 @@ class PerangkatController extends Component
 
 
 
-    public function updateConditions($devicesId)
+    public function updateConditions($id)
     {
-        $devices = $this->perangkatRepository->updateConditions($devicesId);
+        $devices = $this->perangkatRepository->updateConditions($id);
         if (!$devices) {
             $this->dispatchErrorMessage('Perangkat tidak ditemukan!');
             return;
@@ -89,8 +95,6 @@ class PerangkatController extends Component
 
 
 
-
-    private function resetPage() {}
 
 
     public function close()

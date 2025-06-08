@@ -50,8 +50,23 @@ class PerangkatController extends Component
             $this->search,
             $this->perPage,
             $this->sortField,
-            $this->sortDirection
+            $this->sortDirection,
+            ['Baik']
+
         );
         return view('livewire.komando.perangkat', $data);
+    }
+
+
+
+   
+    public function updateConditions($id)
+    {
+        $devices = $this->perangkatRepository->updateConditions($id);
+        if (!$devices) {
+            $this->dispatchErrorMessage('Perangkat tidak ditemukan!');
+            return;
+        }
+        $this->dispatchSuccesMassage("Status perangkat berhasil diubah menjadi {$devices->kondisi}", 1700);
     }
 }

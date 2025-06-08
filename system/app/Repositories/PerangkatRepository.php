@@ -6,6 +6,7 @@ use App\Models\Perangkat;
 use App\Repositories\Repository;
 use App\Traits\QueryHelper;
 use Illuminate\Support\Facades\Storage;
+use PhpParser\Node\Expr\Throw_;
 
 class PerangkatRepository extends Repository
 {
@@ -13,16 +14,18 @@ class PerangkatRepository extends Repository
 
 
 
-    public function getDevices($search, $perPage, $sortField = null, $sortDirection = null)
+public function getDevices($search, $perPage, $sortField = null, $sortDirection = null, $condition = [])
 {
-    // Tandai perangkat sebagai tidak aktif jika tidak update dalam 30 detik
-    $cutoff = now()->subSeconds(30);
-    Perangkat::where('updated_at', '<', $cutoff)
-        ->where('status', 'aktif')
-        ->update(['status' => 'tidak aktif']);
-
+    if(empty($condition)) throw new \Exception('Tidak ada kondisi yang dipilih');
+  
     // Ambil data perangkat dengan filter dan sorting
-    return Perangkat::where('no_seri', 'like', "%{$search}%")
+    return Perangkat::whereIn('kondisi', $condition)
+    ->where(function($query) use ($search) {
+        $query->where('no_seri', 'like', "%{$search}%")
+              ->orWhere('status', 'like', "%{$search}%")
+              ->orWhere('kondisi', 'like', "%{$search}%");
+    })
+   
         ->orderBy($sortField ?? 'id', $sortDirection ?? 'asc')
         ->paginate($perPage);
 }
