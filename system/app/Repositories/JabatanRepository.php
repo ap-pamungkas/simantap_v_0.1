@@ -67,7 +67,7 @@ class JabatanRepository extends Repository
         $jabatan = Jabatan::findOrFail($id);
         $jabatan->update($data);
 
-        $this->logActivity($jabatan, 'updated menjadi ' . $jabatan->nama_jabatan, [
+        $this->logActivity($jabatan, 'updated menjadi ', [
 
             'nama_jabatan_baru' => $jabatan->nama_jabatan,
         ]);

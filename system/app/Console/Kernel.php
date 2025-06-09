@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
     {
         // Jalankan backup seminggu sekali pada hari Minggu pukul 02:00 pagi
         $schedule->command('backup:run')->weeklyOn(0, '02:00');
-
+        $schedule->command('logs:rotate-activity')->weeklyOn(1, '01:00');
         // Anda juga bisa membersihkan backup lama secara berkala
         // $schedule->command('backup:clean')->daily();
     }

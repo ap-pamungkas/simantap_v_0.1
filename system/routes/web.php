@@ -46,3 +46,8 @@ Route::prefix('komando')->group(function () {
     Route::get('/insiden/show/{id}', KomandoInsidenShow::class)->name('komando.insiden.show');
 
 });
+
+
+Route::get('/sensor-monitor', function () {
+    return view('sensor-monitor');
+});
