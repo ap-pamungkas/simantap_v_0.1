@@ -5,10 +5,8 @@
 
 @endphp
 
-<a wire:navigate href="{{  route("$url")}}" {{ $attributes->merge(['class' => $class]) }}>
-    <i class="nav-icon bi bi-chevron-right "></i>
+<a  href="{{  route("$url")}}" {{ $attributes->merge(['class' => $class]) }}>
+    <i class="nav-icon {{ $icon ?? 'bi bi-chevron-right' }} "></i>
     <p>{{ $label }} </p>
   </a>
 
-  {{-- bi bi-chevron-right --}}
-  {{-- url('admin/petugas')  --}}

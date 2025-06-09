@@ -16,9 +16,9 @@ class MenuItems extends Component
      public $icon;
      public $active;
      public $url;
-    public function __construct()
+    public function __construct($icon = null)
     {
-        //
+        $this->icon = $icon;
     }
 
     /**

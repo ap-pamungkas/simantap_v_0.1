@@ -21,12 +21,14 @@
             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
 
                 <li class="nav-item">
-                    <a wire:navigate href="{{ route('admin.beranda') }}"
-                        class="nav-link {{ request()->routeIs('admin.beranda') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-home"></i>
-                        <p>Dashboard</p>
-                    </a>
-
+                  
+                    <x-layouts.admin.menu-items :url="'admin.beranda'" icon="fas fa-home" class="nav-link" :active="request()->is('admin/beranda')"
+                        label="Beranda" />
+                </li>
+                <li class="nav-item">
+                  
+                    <x-layouts.admin.menu-items icon="fas fa-mobile" :url="'admin.perangkat'" class="nav-link" :active="request()->is('admin/perangkat')"
+                        label="Perangkat" />
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link ">
@@ -45,22 +47,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link ">
-                        <i class="nav-icon fas fa-mobile"></i>
-                        <p>
-                            Data Perangkat
-                            <i class="nav-arrow bi bi-chevron-right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <x-layouts.admin.menu-items :url="'admin.perangkat'" class="nav-link" :active="request()->is('admin/perangkat')"
-                                label="Perangkat" />
-
-                        </li>
-                    </ul>
-                </li>
+               
                 <li class="nav-item">
                     <a href="#" class="nav-link ">
                         <i class="nav-icon bi bi-activity"></i>

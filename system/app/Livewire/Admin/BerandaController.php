@@ -2,68 +2,154 @@
 
 namespace App\Livewire\Admin;
 
+use App\Models\Perangkat;
+use App\Models\LogPetugas;
+use App\Models\LogPerangkat;
+use App\Models\Petugas;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Illuminate\Support\Facades\DB;
+
 
 class BerandaController extends Component
 {
-
-
     #[Title("Beranda")]
-    public $staffOnDuty = 25;
-    public $devicesUsed = 50;
-    public $devicesActive = 42;
+    public $staffActive; // Petugas bertugas (LogPetugas status 0)
+    public $devices; // Perangkat aktif
+    public $damagedDevices; // Total perangkat aktif
     public $mapTheme = 'light'; // Default base layer
 
-    public $temperatureData = [
-        'labels' => ['1988', '1989', '1990', '1991', '1992', '1993', '1994', '1995', '1996', '1997'],
-        'data1' => [20, 22, 24, 26, 25, 23, 27, 28, 30, 31],
-        'data2' => [22, 24, 26, 28, 30, 29, 31, 32, 33, 34],
-        'data3' => [18, 20, 22, 23, 24, 22, 25, 26, 27, 28],
-        'data4' => [15, 16, 17, 18, 17, 16, 15, 14, 13, 12],
-        'average' => [18.75, 20.5, 22.25, 23.75, 24, 22.5, 24.5, 25, 25.75, 26.25],
-        'coords' => [
-            ['lat' => -1.8500, 'lng' => 109.9667], // Ketapang
-            ['lat' => -1.8600, 'lng' => 109.9700],
-            ['lat' => -1.8400, 'lng' => 109.9600],
-            ['lat' => -1.8550, 'lng' => 109.9750],
-            ['lat' => -1.8450, 'lng' => 109.9650],
-            ['lat' => -1.8520, 'lng' => 109.9680],
-            ['lat' => -1.8580, 'lng' => 109.9620],
-            ['lat' => -1.8530, 'lng' => 109.9720],
-            ['lat' => -1.8470, 'lng' => 109.9670],
-            ['lat' => -1.8510, 'lng' => 109.9690],
-        ]
-    ];
+    public $temperatureData = [];
+    public $co2Data = [];
+    public $incidentData = [];
 
-    public $co2Data = [
-        'labels' => ['1988', '1989', '1990', '1991', '1992', '1993', '1994', '1995', '1996', '1997'],
-        'data1' => [350, 355, 360, 365, 362, 358, 370, 375, 380, 385],
-        'data2' => [360, 365, 370, 375, 380, 378, 385, 390, 395, 400],
-        'data3' => [340, 345, 350, 355, 360, 358, 362, 365, 370, 372],
-        'data4' => [330, 332, 335, 338, 335, 333, 330, 328, 325, 323],
-        'average' => [345, 349.25, 353.75, 358.25, 359.25, 356.75, 361.75, 364.5, 367.5, 370],
-        'coords' => [
-            ['lat' => -1.8500, 'lng' => 109.9667], // Ketapang
-            ['lat' => -1.8600, 'lng' => 109.9700],
-            ['lat' => -1.8400, 'lng' => 109.9600],
-            ['lat' => -1.8550, 'lng' => 109.9750],
-            ['lat' => -1.8450, 'lng' => 109.9650],
-            ['lat' => -1.8520, 'lng' => 109.9680],
-            ['lat' => -1.8580, 'lng' => 109.9620],
-            ['lat' => -1.8530, 'lng' => 109.9720],
-            ['lat' => -1.8470, 'lng' => 109.9670],
-            ['lat' => -1.8510, 'lng' => 109.9690],
-        ]
-    ];
+    public function mount()
+    {
+        // Hitung petugas bertugas (LogPetugas dengan status 0)
+        $this->staffActive = Petugas::where('status', 'Aktif')->count('id');
+
+        // Hitung perangkat aktif
+        $this->devices = Perangkat::count('id');
+
+        $this->damagedDevices = Perangkat::where('status', 'Rusak')->count('id');
+
+        // Ambil data suhu dan kualitas udara dari LogPerangkat (7 hari terakhir)
+        $logPerangkat = LogPerangkat::select(
+            DB::raw('DATE(created_at) as date'),
+            DB::raw('AVG(suhu) as avg_suhu'),
+            DB::raw('AVG(kualitas_udara) as avg_kualitas_udara'),
+            DB::raw('AVG(latitude) as avg_latitude'),
+            DB::raw('AVG(longitude) as avg_longitude')
+        )
+            ->where('created_at', '>=', now()->subDays(7))
+            ->whereNotNull('suhu')
+            ->whereNotNull('kualitas_udara')
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
+        // Data untuk grafik dan heatmap suhu
+        $this->temperatureData = [
+            'labels' => $logPerangkat->pluck('date')->map(fn($date) => date('Y-m-d', strtotime($date)))->toArray(),
+            'data' => $logPerangkat->pluck('avg_suhu')->map(fn($suhu) => round((float)$suhu, 1))->toArray(),
+            'coords' => $logPerangkat->filter(function($log) {
+                return $log->avg_latitude && $log->avg_longitude && $log->avg_suhu;
+            })->map(fn($log) => [
+                'lat' => round((float)$log->avg_latitude, 6),
+                'lng' => round((float)$log->avg_longitude, 6),
+                'intensity' => max(0, min(1, round((float)$log->avg_suhu, 1) / 40)),
+            ])->values()->toArray(),
+        ];
+
+        // Data untuk grafik dan heatmap kualitas udara
+        $this->co2Data = [
+            'labels' => $logPerangkat->pluck('date')->map(fn($date) => date('Y-m-d', strtotime($date)))->toArray(),
+            'data' => $logPerangkat->pluck('avg_kualitas_udara')->map(fn($kualitas) => round((float)$kualitas, 1))->toArray(),
+            'coords' => $logPerangkat->filter(function($log) {
+                return $log->avg_latitude && $log->avg_longitude && $log->avg_kualitas_udara;
+            })->map(fn($log) => [
+                'lat' => round((float)$log->avg_latitude, 6),
+                'lng' => round((float)$log->avg_longitude, 6),
+                'intensity' => max(0, min(1, round((float)$log->avg_kualitas_udara, 1) / 500)),
+            ])->values()->toArray(),
+        ];
+
+        // Ambil data petugas bertugas (7 hari terakhir)
+        $logPetugas = LogPetugas::select(
+            DB::raw('DATE(created_at) as date'),
+            DB::raw('COUNT(*) as count')
+        )
+            ->where('status', 0)
+            ->where('created_at', '>=', now()->subDays(7))
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
+        // Create a complete date range for the last 7 days
+        $dateRange = collect();
+        for ($i = 6; $i >= 0; $i--) {
+            $dateRange->push(now()->subDays($i)->format('Y-m-d'));
+        }
+
+        $this->incidentData = [
+            'labels' => $dateRange->toArray(),
+            'petugas' => [],
+            'suhu' => [],
+            'kualitas_udara' => [],
+        ];
+
+        // Map data to complete date range
+        foreach ($dateRange as $date) {
+            // Petugas count
+            $petugasCount = $logPetugas->firstWhere('date', $date)?->count ?? 0;
+            $this->incidentData['petugas'][] = $petugasCount;
+
+            // Suhu data
+            $suhuData = $logPerangkat->firstWhere('date', $date);
+            $this->incidentData['suhu'][] = $suhuData ? round((float)$suhuData->avg_suhu, 1) : 0;
+
+            // Kualitas udara data
+            $this->incidentData['kualitas_udara'][] = $suhuData ? round((float)$suhuData->avg_kualitas_udara, 1) : 0;
+        }
+
+        // Fallback jika data kosong
+        if (empty($this->temperatureData['labels'])) {
+            $defaultDate = now()->format('Y-m-d');
+            $this->temperatureData = [
+                'labels' => [$defaultDate],
+                'data' => [0],
+                'coords' => [['lat' => -1.8467, 'lng' => 109.9719, 'intensity' => 0]],
+            ];
+        }
+        if (empty($this->co2Data['labels'])) {
+            $defaultDate = now()->format('Y-m-d');
+            $this->co2Data = [
+                'labels' => [$defaultDate],
+                'data' => [0],
+                'coords' => [['lat' => -1.8467, 'lng' => 109.9719, 'intensity' => 0]],
+            ];
+        }
+        if (empty($this->incidentData['labels'])) {
+            $defaultDate = now()->format('Y-m-d');
+            $this->incidentData = [
+                'labels' => [$defaultDate],
+                'petugas' => [0],
+                'suhu' => [0],
+                'kualitas_udara' => [0],
+            ];
+        }
+    }
 
     public function updateMapTheme($theme)
     {
-        $validThemes = ['light', 'dark', 'satellite']; // Add more valid themes here as needed
+        $validThemes = ['light', 'dark', 'satellite'];
         if (in_array($theme, $validThemes)) {
             $this->mapTheme = $theme;
         }
     }
+
     public function render()
     {
         return view('livewire.admin.beranda');

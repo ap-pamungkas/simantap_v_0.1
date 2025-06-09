@@ -9,7 +9,6 @@
          <div class="card-title">
            <h2> DATA JABATAN</h2>
          </div>
-
       </div>
       <div class="card-body">
             <div class="row">
@@ -43,10 +42,6 @@
                                     </button>
                                     </td>
                                 </tr>
-
-
-                                <!-- Modal Hapus Data -->
-                                {{-- <x-modals.modalhapus id="hapus{{ $jabatan->id }}" click="deleteData({{ $jabatan->id }})" /> --}}
                             @empty
                                 <tr>
                                     <td colspan="3">Tidak ada data untuk ditampilkan!</td>
