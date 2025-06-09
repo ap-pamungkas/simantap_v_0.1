@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Activitylog\LogOptions;
+
 /**
  *
  *
@@ -73,5 +75,14 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable() // Log semua atribut yang ada di $fillable
+            ->logOnlyDirty() // Hanya log perubahan pada atribut
+            ->dontSubmitEmptyLogs(); // Jangan simpan log jika tidak ada perubahan
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Spatie\Activitylog\LogOptions;
 
 /**
  * 
@@ -37,4 +37,12 @@ class Jabatan extends Model
         'nama_jabatan.string' => 'Nama jabatan harus berupa huruf',
         'nama_jabatan.max' => 'Nama jabatan maksimal 255 karakter',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable()        // Log semua atribut yang ada di $fillable
+            ->logOnlyDirty()       // Hanya log perubahan pada atribut
+            ->dontSubmitEmptyLogs(); // Jangan simpan log jika tidak ada perubahan
+    }
 }
