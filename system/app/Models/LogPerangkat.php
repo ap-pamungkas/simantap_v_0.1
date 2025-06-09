@@ -16,6 +16,9 @@ class LogPerangkat extends Model
         'status',
     ];
 
+  protected $with = [
+    'perangkat',
+  ];
 
     public function perangkat()
     {

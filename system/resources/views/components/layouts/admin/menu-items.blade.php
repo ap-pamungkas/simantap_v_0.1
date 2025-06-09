@@ -5,7 +5,7 @@
 
 @endphp
 
-<a wire:poll.1s  href="{{  route("$url")}}" {{ $attributes->merge(['class' => $class]) }}>
+<a wire:navigate href="{{  route("$url")}}" {{ $attributes->merge(['class' => $class]) }}>
     <i class="nav-icon bi bi-chevron-right "></i>
     <p>{{ $label }} </p>
   </a>

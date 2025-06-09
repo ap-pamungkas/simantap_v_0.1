@@ -1,6 +1,6 @@
 <div>
     <x-alerts.dispatch-message />
-    <div wire:poll.1s class="card card-outline card-secondary">
+    <div  class="card card-outline card-secondary">
       <div class="card-header">
         <button class="btn btn-success btn-sm float-end" data-bs-toggle="modal" data-bs-target="#tambah">
             <i class="bi bi-plus"></i>
@@ -46,7 +46,7 @@
 
 
                                 <!-- Modal Hapus Data -->
-                                <x-modals.modalhapus id="hapus{{ $jabatan->id }}" click="deleteData({{ $jabatan->id }})" />
+                                {{-- <x-modals.modalhapus id="hapus{{ $jabatan->id }}" click="deleteData({{ $jabatan->id }})" /> --}}
                             @empty
                                 <tr>
                                     <td colspan="3">Tidak ada data untuk ditampilkan!</td>

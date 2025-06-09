@@ -201,7 +201,10 @@
 
     <script src="{{ url('public/fontawesome-free-6.7.2-web/js/all.js') }}"></script>
     <script src="{{ url('public/charts/apexcharts.js') }}"></script>
+  
+  
     @stack('scripts')
+    @livewireScripts
   </body>
   <!--end::Body-->
 </html>
