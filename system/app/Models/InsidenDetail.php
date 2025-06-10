@@ -12,7 +12,7 @@ class InsidenDetail extends Model
         'insiden_id',
         'LogPetugas_id',    
     ];
- 
+
     // Get related LogPetugas records
     public function logPetugas()
     {
